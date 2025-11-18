@@ -3,6 +3,8 @@ import 'package:blood_bank/features/auth/presentation/views/login_view.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingView extends StatefulWidget {
+  const OnboardingView({super.key});
+
   @override
   _OnboardingViewState createState() => _OnboardingViewState();
 }
