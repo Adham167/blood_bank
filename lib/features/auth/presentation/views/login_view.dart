@@ -52,6 +52,7 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Spacer(),
                 const SizedBox(height: 50),
 
                 const Text(
