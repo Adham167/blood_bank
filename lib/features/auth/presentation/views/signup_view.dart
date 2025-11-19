@@ -151,8 +151,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                             UserCredential userCredential = await FirebaseAuth
                                 .instance
                                 .createUserWithEmailAndPassword(
-                                  email: _emailCtrl.text.trim(),
-                                  password: _passwordCtrl.text.trim(),
+                                  email: _emailCtrl.text,
+                                  password: _passwordCtrl.text,
                                 );
                             Navigator.push(
                               context,

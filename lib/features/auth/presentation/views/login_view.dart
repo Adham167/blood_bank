@@ -1,4 +1,6 @@
 import 'package:blood_bank/features/auth/presentation/views/signup_view.dart';
+import 'package:blood_bank/presentation/views/home_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
@@ -9,6 +11,8 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
+  final TextEditingController _emailCtrl = TextEditingController();
+  final TextEditingController _passwordCtrl = TextEditingController();
   late AnimationController _fadeCtrl;
   late Animation<double> _fade;
   late AnimationController _buttonCtrl;
@@ -66,12 +70,17 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 45),
 
-                _inputField(label: "Email", icon: Icons.email_outlined),
+                _inputField(
+                  label: "Email",
+                  icon: Icons.email_outlined,
+                  controller: _emailCtrl,
+                ),
                 const SizedBox(height: 20),
                 _inputField(
                   label: "Password",
                   icon: Icons.lock_outline,
                   obscure: true,
+                  controller: _passwordCtrl,
                 ),
                 const SizedBox(height: 35),
 
@@ -84,6 +93,24 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
                       onPressed: () async {
                         await _buttonCtrl.reverse();
                         await _buttonCtrl.forward();
+                        try {
+                          UserCredential userCredential = await FirebaseAuth
+                              .instance
+                              .signInWithEmailAndPassword(
+                                email: _emailCtrl.text,
+                                password: _passwordCtrl.text,
+                              );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomeView()),
+                          );
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'user-not-found') {
+                            print('No user found for that email.');
+                          } else if (e.code == 'wrong-password') {
+                            print('Wrong password provided for that user.');
+                          }
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xffD32F2F),
@@ -139,9 +166,11 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
   Widget _inputField({
     required String label,
     required IconData icon,
+    required TextEditingController controller,
     bool obscure = false,
   }) {
     return TextField(
+      controller: controller,
       obscureText: obscure,
       decoration: InputDecoration(
         labelText: label,
