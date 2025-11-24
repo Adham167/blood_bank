@@ -121,7 +121,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                             await _buttonCtrl.reverse();
                             await _buttonCtrl.forward();
                             if (globalKey.currentState!.validate()) {
-                              AuthService.signUp(context, userModel!);
+                              AuthService.signUp(context, userModel);
                             }
                           },
                           style: ElevatedButton.styleFrom(

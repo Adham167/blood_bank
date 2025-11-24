@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:blood_bank/core/constants/show_snack_bar.dart';
 import 'package:blood_bank/features/auth/data/models/user.dart';
 import 'package:blood_bank/features/auth/presentation/views/login_view.dart';
 import 'package:blood_bank/presentation/views/home_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -35,6 +38,23 @@ abstract class AuthService {
             email: userModel.email!,
             password: userModel.password!,
           );
+      log("mes");
+
+      if (userModel.name != null &&
+          userModel.phone != null &&
+          userModel.email != null &&
+          userModel.password != null) {
+        log("message");
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .doc(userCredential.user!.uid)
+            .set({
+              'fullName': userModel.name,
+              'phone': userModel.phone,
+              'email': userModel.email,
+              'password': userModel.password,
+            });
+      }
       ShowSnackBar.ShowSnackBarMessage(
         context,
         "Creating Account Successfully",
