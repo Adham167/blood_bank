@@ -1,6 +1,7 @@
+import 'package:blood_bank/core/constants/show_snack_bar.dart';
+import 'package:blood_bank/features/auth/data/services/auth_service.dart';
 import 'package:blood_bank/features/auth/presentation/views/signup_view.dart';
-import 'package:blood_bank/presentation/views/home_view.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:blood_bank/presentation/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
@@ -11,8 +12,6 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
-  final TextEditingController _emailCtrl = TextEditingController();
-  final TextEditingController _passwordCtrl = TextEditingController();
   late AnimationController _fadeCtrl;
   late Animation<double> _fade;
   late AnimationController _buttonCtrl;
@@ -44,6 +43,10 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  String? email;
+  String? password;
+  bool _obscure = true;
+  GlobalKey<FormState> globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,141 +56,115 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
           opacity: _fade,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Spacer(),
-                const SizedBox(height: 50),
+            child: Form(
+              key: globalKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Spacer(),
+                  const SizedBox(height: 50),
 
-                const Text(
-                  "Welcome Back 🩸",
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 6),
-                const Text(
-                  "Sign in to continue",
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
-                ),
-                const SizedBox(height: 45),
+                  const Text(
+                    "Welcome Back 🩸",
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    "Sign in to continue",
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
+                  const SizedBox(height: 45),
 
-                _inputField(
-                  label: "Email",
-                  icon: Icons.email_outlined,
-                  controller: _emailCtrl,
-                ),
-                const SizedBox(height: 20),
-                _inputField(
-                  label: "Password",
-                  icon: Icons.lock_outline,
-                  obscure: true,
-                  controller: _passwordCtrl,
-                ),
-                const SizedBox(height: 35),
-
-                ScaleTransition(
-                  scale: _buttonCtrl,
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 55,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await _buttonCtrl.reverse();
-                        await _buttonCtrl.forward();
-                        try {
-                          UserCredential userCredential = await FirebaseAuth
-                              .instance
-                              .signInWithEmailAndPassword(
-                                email: _emailCtrl.text,
-                                password: _passwordCtrl.text,
-                              );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomeView()),
-                          );
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == 'user-not-found') {
-                            print('No user found for that email.');
-                          } else if (e.code == 'wrong-password') {
-                            print('Wrong password provided for that user.');
-                          }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xffD32F2F),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 3,
+                  CustomTextFormField(
+                    label: "Emial",
+                    icon: Icon(Icons.email),
+                    isEmailField: true,
+                    onChanged: (data) => email = data,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextFormField(
+                    label: "Password",
+                    icon: Icon(Icons.lock),
+                    obscureText: _obscure,
+                    iconButton: IconButton(
+                      onPressed:
+                          () => setState(() {
+                            _obscure = !_obscure;
+                          }),
+                      icon: Icon(
+                        _obscure ? Icons.visibility_off : Icons.visibility,
                       ),
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                    ),
+                    onChanged: (data) => password = data,
+                  ),
+                  const SizedBox(height: 35),
+
+                  ScaleTransition(
+                    scale: _buttonCtrl,
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await _buttonCtrl.reverse();
+                          await _buttonCtrl.forward();
+                          if (globalKey.currentState!.validate()) {
+                            AuthService.signin(
+                              context,
+                              email: email!,
+                              password: password!,
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xffD32F2F),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          elevation: 3,
+                        ),
+                        child: const Text(
+                          "Login",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account? "),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const SignUpView()),
-                        );
-                      },
-                      child: const Text(
-                        "Sign Up",
-                        style: TextStyle(
-                          color: Color(0xffD32F2F),
-                          fontWeight: FontWeight.bold,
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Don't have an account? "),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SignUpView(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Sign Up",
+                          style: TextStyle(
+                            color: Color(0xffD32F2F),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
 
-                const Spacer(),
-              ],
+                  const Spacer(),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _inputField({
-    required String label,
-    required IconData icon,
-    required TextEditingController controller,
-    bool obscure = false,
-  }) {
-    return TextField(
-      controller: controller,
-      obscureText: obscure,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: Colors.grey[700]),
-        filled: true,
-        fillColor: Colors.grey.shade100,
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 18,
-          horizontal: 20,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color(0xffD32F2F), width: 2),
-          borderRadius: BorderRadius.circular(14),
         ),
       ),
     );
