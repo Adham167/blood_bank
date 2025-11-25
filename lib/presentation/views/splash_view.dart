@@ -1,6 +1,7 @@
+import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/constants/assets.dart';
-import 'package:blood_bank/presentation/views/onboarding_view.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -35,16 +36,7 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
 
     // Navigate to Login after 2 seconds
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          transitionDuration: Duration(milliseconds: 200),
-          pageBuilder: (_, __, ___) => OnboardingView(),
-          transitionsBuilder: (_, animation, __, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-        ),
-      );
+      GoRouter.of(context).pushReplacement(AppRouter.kOnboardingView);
     });
   }
 

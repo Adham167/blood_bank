@@ -1,6 +1,7 @@
+import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/constants/assets.dart';
-import 'package:blood_bank/features/auth/presentation/views/login_view.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -123,10 +124,9 @@ class _OnboardingViewState extends State<OnboardingView> {
                         curve: Curves.easeOutCubic,
                       );
                     } else {
-                      Navigator.pushReplacement(
+                      GoRouter.of(
                         context,
-                        MaterialPageRoute(builder: (_) => LoginView()),
-                      );
+                      ).pushReplacement(AppRouter.kLoginView);
                     }
                   },
                   style: ElevatedButton.styleFrom(
