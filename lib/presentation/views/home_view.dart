@@ -1,3 +1,8 @@
+import 'package:blood_bank/core/app/app_styles.dart';
+import 'package:blood_bank/presentation/widgets/donars_list_view.dart';
+import 'package:blood_bank/presentation/widgets/grid_view_body.dart';
+import 'package:blood_bank/presentation/widgets/note_emergency_body.dart';
+import 'package:blood_bank/presentation/widgets/top_body.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {
@@ -5,6 +10,32 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("Home Screen")));
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            TopBody(),
+            SizedBox(height: 28),
+            NoteEmergencyBody(),
+            SizedBox(height: 8),
+            GridViewBody(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Text(
+                    "Nearby Donors",
+                    style: AppStyles.styleBold18.copyWith(color: Colors.black),
+                  ),
+                  Spacer(),
+                  Text("View All", style: AppStyles.styleSemiBold12),
+                ],
+              ),
+            ),
+            DonarsListView(),
+          ],
+        ),
+      ),
+    );
   }
 }

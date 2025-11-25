@@ -1,7 +1,6 @@
 import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/constants/show_snack_bar.dart';
 import 'package:blood_bank/features/auth/data/models/user.dart';
-import 'package:blood_bank/features/auth/data/services/auth_service.dart';
 import 'package:blood_bank/features/auth/presentation/manager/signup_cubit/signup_cubit.dart';
 import 'package:blood_bank/presentation/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
