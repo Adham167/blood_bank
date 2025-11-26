@@ -1,3 +1,4 @@
+import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class NoteEmergencyBody extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: Colors.red,
+          color: AppColors.primary,
         ),
         child: Padding(
           padding: const EdgeInsets.all(32.0),
@@ -22,11 +23,11 @@ class NoteEmergencyBody extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.error_outline, color: Colors.white),
+                  Icon(Icons.error_outline, color: AppColors.background),
                   SizedBox(width: 8),
                   Text(
                     "URGENT: B+ Needed",
-                    style: AppStyles.styleBold20.copyWith(color: Colors.white),
+                    style: AppStyles.styleBold20.copyWith(color:AppColors.background),
                   ),
                 ],
               ),
@@ -36,14 +37,14 @@ class NoteEmergencyBody extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.location_on_outlined,
-                    color: Colors.white,
+                    color: AppColors.background,
                     size: 18,
                   ),
                   SizedBox(width: 4),
                   Text(
                     "5.3Km away.Manhattan ",
                     style: AppStyles.styleMedium14.copyWith(
-                      color: Colors.white,
+                      color:AppColors.background,
                     ),
                   ),
                 ],
@@ -54,13 +55,13 @@ class NoteEmergencyBody extends StatelessWidget {
                 height: 40,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.background,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Center(
                   child: Text(
                     "Donate Now",
-                    style: AppStyles.styleMedium16.copyWith(color: Colors.red),
+                    style: AppStyles.styleMedium16.copyWith(color:AppColors.primary),
                   ),
                 ),
               ),

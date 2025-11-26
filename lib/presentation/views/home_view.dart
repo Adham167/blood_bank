@@ -19,8 +19,9 @@ class HomeView extends StatelessWidget {
             NoteEmergencyBody(),
             SizedBox(height: 8),
             GridViewBody(),
+            SizedBox(height: 16),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
                   Text(
@@ -33,6 +34,7 @@ class HomeView extends StatelessWidget {
               ),
             ),
             DonarsListView(),
+            SizedBox(height: 64),
           ],
         ),
       ),

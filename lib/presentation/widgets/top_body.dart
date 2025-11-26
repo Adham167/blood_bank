@@ -1,19 +1,17 @@
-
+import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:flutter/material.dart';
 
 class TopBody extends StatelessWidget {
-  const TopBody({
-    super.key,
-  });
+  const TopBody({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.red,
+      color: AppColors.primary,
       width: double.infinity,
       height: 220,
-    
+
       child: Column(
         children: [
           Padding(
@@ -30,14 +28,14 @@ class TopBody extends StatelessWidget {
                 Text(
                   "BloodConnect",
                   style: AppStyles.styleBold24.copyWith(
-                    color: Colors.white,
+                    color: AppColors.background,
                   ),
                 ),
                 IconButton(
                   onPressed: () {},
                   icon: Icon(
                     Icons.notifications_outlined,
-                    color: Colors.white,
+                    color: AppColors.background,
                     size: 26,
                   ),
                 ),
@@ -51,7 +49,7 @@ class TopBody extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: Colors.white.withOpacity(0.5),
+                color: AppColors.background.withOpacity(0.5),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -63,27 +61,19 @@ class TopBody extends StatelessWidget {
                       height: 30,
                       width: 135,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.background,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Center(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: Row(
                             children: [
-                              Text(
-                                "Type",
-                                style: AppStyles.styleRegular14,
-                              ),
+                              Text("Type", style: AppStyles.styleRegular14),
                               Spacer(),
                               Transform.rotate(
                                 angle: -1.571,
-                                child: Icon(
-                                  Icons.arrow_back_ios,
-                                  size: 16,
-                                ),
+                                child: Icon(Icons.arrow_back_ios, size: 16),
                               ),
                             ],
                           ),
@@ -95,14 +85,12 @@ class TopBody extends StatelessWidget {
                       height: 30,
                       width: 145,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.background,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Center(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: Row(
                             children: [
                               Icon(Icons.location_on, size: 16),
@@ -121,7 +109,7 @@ class TopBody extends StatelessWidget {
                       height: 30,
                       width: 30,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.background,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Icon(Icons.search, size: 18),

@@ -1,3 +1,4 @@
+import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:blood_bank/presentation/models/grid_model.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class GridViewBody extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CircleAvatar(
-                    backgroundColor: Colors.red.withOpacity(0.1),
+                    backgroundColor: AppColors.primary.withOpacity(0.1),
                     child: Icon(gridList[index].icon.icon, color: Colors.red),
                   ),
                   SizedBox(height: 8),

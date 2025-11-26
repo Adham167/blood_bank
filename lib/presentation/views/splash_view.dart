@@ -41,7 +41,6 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
         return GoRouter.of(context).pushReplacement(AppRouter.kHomeView);
       } else {
         return GoRouter.of(context).pushReplacement(AppRouter.kOnboardingView);
-        ;
       }
     });
   }
