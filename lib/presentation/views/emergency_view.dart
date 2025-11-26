@@ -41,7 +41,7 @@ class EmergencyView extends StatelessWidget {
 
 // ----------------- Emergency Alert -----------------
 class _EmergencyAlert extends StatelessWidget {
-  const _EmergencyAlert({super.key});
+  const _EmergencyAlert();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class _EmergencyAlert extends StatelessWidget {
 
 // ----------------- Blood Request Form -----------------
 class _BloodRequestForm extends StatefulWidget {
-  const _BloodRequestForm({super.key});
+  const _BloodRequestForm();
 
   @override
   State<_BloodRequestForm> createState() => _BloodRequestFormState();
@@ -200,7 +200,7 @@ class _BloodRequestFormState extends State<_BloodRequestForm> {
 
 // ----------------- Next Steps -----------------
 class _NextSteps extends StatelessWidget {
-  const _NextSteps({super.key});
+  const _NextSteps();
 
   @override
   Widget build(BuildContext context) {

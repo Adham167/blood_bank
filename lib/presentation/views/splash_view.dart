@@ -1,6 +1,5 @@
 import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/constants/assets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -37,11 +36,7 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
 
     // Navigate to Login after 2 seconds
     Future.delayed(Duration(seconds: 2), () {
-      if (FirebaseAuth.instance.currentUser != null) {
-        return GoRouter.of(context).pushReplacement(AppRouter.kHomeView);
-      } else {
-        return GoRouter.of(context).pushReplacement(AppRouter.kOnboardingView);
-      }
+      return GoRouter.of(context).pushReplacement(AppRouter.kOnboardingView);
     });
   }
 

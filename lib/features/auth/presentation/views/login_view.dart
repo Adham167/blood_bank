@@ -62,7 +62,9 @@ class _LoginViewState extends State<LoginView> with TickerProviderStateMixin {
             isLoading = true;
           } else if (state is LoginSuccess) {
             ShowSnackBar.ShowSnackBarMessage(context, "Logging in Success");
-            GoRouter.of(context).pushReplacement(AppRouter.kHomeView);
+            GoRouter.of(
+              context,
+            ).pushReplacement(AppRouter.kCustomNavigationBar);
           } else if (state is LoginFailure) {
             isLoading = false;
             ShowSnackBar.ShowSnackBarErrMessage(context, state.errMessage);

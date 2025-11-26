@@ -9,6 +9,7 @@ import 'package:blood_bank/presentation/views/map_view.dart';
 import 'package:blood_bank/presentation/views/onboarding_view.dart';
 import 'package:blood_bank/presentation/views/profile_view.dart';
 import 'package:blood_bank/presentation/views/splash_view.dart';
+import 'package:blood_bank/presentation/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,6 +24,7 @@ abstract class AppRouter {
   static String kEmergencyView = "/EmergencyView";
   static String kProfileView = "/ProfileView";
   static String kDonorProfileView = "/DonorProfileView";
+  static String kCustomNavigationBar = "/CustomNavigationBar";
 
   static final router = GoRouter(
     routes: [
@@ -31,6 +33,10 @@ abstract class AppRouter {
       GoRoute(path: kSignUpView, builder: (context, state) => SignUpView()),
       GoRoute(path: kHomeView, builder: (context, state) => HomeView()),
       GoRoute(path: kDonerView, builder: (context, state) => DonerView()),
+      GoRoute(
+        path: kCustomNavigationBar,
+        builder: (context, state) => CustomNavigationBar(),
+      ),
       GoRoute(
         path: kBloodBankView,
         builder: (context, state) => BloodBankView(),
