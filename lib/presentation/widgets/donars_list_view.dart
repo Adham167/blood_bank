@@ -1,6 +1,8 @@
 import 'package:blood_bank/core/app/app_colors.dart';
+import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DonarsListView extends StatelessWidget {
   const DonarsListView({super.key});
@@ -12,6 +14,7 @@ class DonarsListView extends StatelessWidget {
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return ListTile(
+          onTap: () => GoRouter.of(context).push(AppRouter.kDonorProfileView),
           leading: CircleAvatar(
             radius: 40,
             backgroundColor: AppColors.primary.withOpacity(0.1),
