@@ -13,14 +13,18 @@ class DonorProfileView extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.black),
         title: const Text(
           "Donor Profile",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
       ),
       body: const SingleChildScrollView(
-        padding:  EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Column(
-          children:  [
-            ProfileCard(),
+          children: [
+            ProfileCard(name: "Sarah johnson"),
             SizedBox(height: 20),
             ContactButtons(),
             SizedBox(height: 20),
@@ -33,29 +37,33 @@ class DonorProfileView extends StatelessWidget {
 }
 
 class ProfileCard extends StatelessWidget {
-  const ProfileCard({super.key});
-
+  const ProfileCard({super.key, required this.name});
+  final String name;
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical:24),
+      padding: const EdgeInsets.symmetric(vertical: 24),
       decoration: BoxDecoration(
         color: const Color(0xfffafafa),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         children: [
-          const CircleAvatar(
-            backgroundColor:  Color(0xfff4e4e4),
+          CircleAvatar(
+            backgroundColor: Color(0xfff4e4e4),
             radius: 60,
             child: Text(
-              "SJ",
-              style: TextStyle(fontSize: 40, color: Color(0xffb8383c), fontWeight: FontWeight.bold),
+              name[0],
+              style: TextStyle(
+                fontSize: 40,
+                color: Color(0xffb8383c),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
-            "Sarah Johnson",
+          Text(
+            name,
             style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 6),
@@ -67,25 +75,43 @@ class ProfileCard extends StatelessWidget {
             ),
             child: const Text(
               "A+",
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 18),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
             ),
           ),
           const SizedBox(height: 8),
-         const Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children:  [
+            children: [
               Icon(Icons.location_on, size: 24, color: Color(0xff908e8f)),
               SizedBox(width: 6),
-              Text("0m away • New York", style: TextStyle(color: Color(0xff908e8f),fontSize: 18,fontWeight: FontWeight.w500)),
+              Text(
+                "0m away • New York",
+                style: TextStyle(
+                  color: Color(0xff908e8f),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 4),
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children:  [
+            children: [
               Icon(Icons.calendar_today, size: 24, color: Color(0xff908e8f)),
               SizedBox(width: 6),
-              Text("Last donation: Oct 26, 2025", style: TextStyle(color: Color(0xff908e8f),fontSize: 16,fontWeight: FontWeight.w500))
+              Text(
+                "Last donation: Oct 26, 2025",
+                style: TextStyle(
+                  color: Color(0xff908e8f),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ],
           ),
         ],
@@ -133,7 +159,6 @@ class ContactButtons extends StatelessWidget {
   }
 }
 
-
 class DonationHistory extends StatelessWidget {
   const DonationHistory({super.key});
 
@@ -156,12 +181,13 @@ class DonationHistory extends StatelessWidget {
           ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount:4,
-            separatorBuilder: (context, index) => const Divider(
-              thickness: 2,
-              color: Color(0xfff1f1f1),
-              height: 1,
-            ),
+            itemCount: 4,
+            separatorBuilder:
+                (context, index) => const Divider(
+                  thickness: 2,
+                  color: Color(0xfff1f1f1),
+                  height: 1,
+                ),
             itemBuilder: (context, index) {
               return const DonationTile();
             },
@@ -180,20 +206,26 @@ class DonationTile extends StatelessWidget {
     return const ListTile(
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
-          backgroundColor:  Color(0xfff4e4e4),
-          child:  Icon(Icons.calendar_today, color: Color(0xffb75760))),
-      title:  Text("Oct 26, 2025", style: TextStyle(fontWeight: FontWeight.w600,fontSize: 18)),
+        backgroundColor: Color(0xfff4e4e4),
+        child: Icon(Icons.calendar_today, color: Color(0xffb75760)),
+      ),
+      title: Text(
+        "Oct 26, 2025",
+        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children:  [
-          Text("New York Blood Center",style: TextStyle(color: Color(0xff939290)),),
+        children: [
+          Text(
+            "New York Blood Center",
+            style: TextStyle(color: Color(0xff939290)),
+          ),
           Text("Regular donation", style: TextStyle(color: Color(0xff939290))),
         ],
       ),
     );
   }
 }
-
 
 class CustomDonorButton extends StatelessWidget {
   final String text;
@@ -217,10 +249,7 @@ class CustomDonorButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: isFilled ? const Color(0xffc22222) : Colors.transparent,
-          border: Border.all(
-            color: const Color(0xfff0f0ee),
-            width: 2,
-          ),
+          border: Border.all(color: const Color(0xfff0f0ee), width: 2),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -245,4 +274,3 @@ class CustomDonorButton extends StatelessWidget {
     );
   }
 }
-
