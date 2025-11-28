@@ -1,6 +1,8 @@
 import 'package:blood_bank/core/app/app_router.dart';
+import 'package:blood_bank/core/app/di/service_locator.dart';
 import 'package:blood_bank/core/constants/show_snack_bar.dart';
 import 'package:blood_bank/features/auth/data/models/user.dart';
+import 'package:blood_bank/features/auth/domain/repos/auth_repo.dart';
 import 'package:blood_bank/features/auth/presentation/manager/signup_cubit/signup_cubit.dart';
 import 'package:blood_bank/presentation/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -50,13 +52,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   bool isLoading = false;
-
-  UserModel userModel = UserModel(name: "", phone: "", email: "", password: "");
+  late String name, phone, email, password;
   GlobalKey<FormState> globalKey = GlobalKey();
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignupCubit(),
+      create: (context) => SignupCubit(getIt<AuthRepo>()),
       child: BlocConsumer<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state is SignupSuccess) {
@@ -75,6 +77,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         builder: (context, state) {
           return ModalProgressHUD(
             inAsyncCall: isLoading,
+
             child: Scaffold(
               backgroundColor: const Color(0xffFAFAFA),
               body: SafeArea(
@@ -85,6 +88,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     child: SingleChildScrollView(
                       child: Form(
                         key: globalKey,
+                        autovalidateMode: autovalidateMode,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -106,29 +110,30 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                             CustomTextFormField(
                               label: "Full Name",
                               icon: Icon(Icons.person),
-                              onChanged: (data) => userModel.name = data,
+                              onChanged: (data) => name = data,
                             ),
                             const SizedBox(height: 16),
 
                             CustomTextFormField(
                               label: "Phone",
                               icon: Icon(Icons.phone),
-                              onChanged: (data) => userModel.phone = data,
+                              onChanged: (data) => phone = data,
                             ),
                             const SizedBox(height: 16),
                             CustomTextFormField(
                               label: "Email",
                               icon: Icon(Icons.email),
                               isEmailField: true,
-                              onChanged: (data) => userModel.email = data,
+                              onChanged: (data) => email = data,
                             ),
                             const SizedBox(height: 16),
                             CustomTextFormField(
                               label: "Password",
-
                               obscureText: _obscure,
                               icon: Icon(Icons.lock_outlined),
-                              onChanged: (data) => userModel.password = data,
+                              onChanged: (data) {
+                                password = data;
+                              },
                               iconButton: IconButton(
                                 onPressed:
                                     () => setState(() => _obscure = !_obscure),
@@ -151,9 +156,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                                     await _buttonCtrl.reverse();
                                     await _buttonCtrl.forward();
                                     if (globalKey.currentState!.validate()) {
+                                      globalKey.currentState!.save();
                                       BlocProvider.of<SignupCubit>(
                                         context,
-                                      ).signup(userModel: userModel);
+                                      ).signUp(email, password, name);
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
