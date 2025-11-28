@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:blood_bank/core/errors/exceptions.dart';
 import 'package:blood_bank/core/errors/failure.dart';
 import 'package:blood_bank/core/service/firebase_auth_service.dart';
@@ -25,7 +27,8 @@ class AuthRepoImpl extends AuthRepo {
     } on CustomException catch (e) {
       return left(ServerFailure(e.message));
     } catch (e) {
-      throw left(ServerFailure("An error accured !!"));
+      log("Exception in sign up : ${e.toString()}");
+      return left(ServerFailure("An error accured !!"));
     }
   }
 }
