@@ -1,24 +1,20 @@
 import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:blood_bank/features/auth/domain/entities/user_entity.dart';
+import 'package:blood_bank/features/auth/domain/repos/auth_repo.dart';
 import 'package:meta/meta.dart';
 
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit() : super(LoginInitial());
-  void login({required String email, required String password}) async {
+  LoginCubit(this.authRepo) : super(LoginInitial());
+
+  final AuthRepo authRepo;
+  Future<void> login(String email, String password) async {
     emit(LoginLoading());
-    await Future.delayed(Duration(seconds: 2));
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      emit(LoginSuccess());
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        emit(LoginFailure(errMessage: "user not found"));
-      } else if (e.code == 'wrong-password') {
-        emit(LoginFailure(errMessage: "wrong password"));
-      }
-    }
+    var result = await authRepo.signIn(email, password);
+    result.fold(
+      (failure) => emit(LoginFailure(errMessage: failure.message)),
+      (userEntity) => emit(LoginSuccess(userEntity: userEntity)),
+    );
   }
 }

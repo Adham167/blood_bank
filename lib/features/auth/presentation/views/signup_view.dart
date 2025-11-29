@@ -65,7 +65,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               context,
               "Creating Account Successfully",
             );
-            GoRouter.of(context).pushReplacement(AppRouter.kLoginView);
+            GoRouter.of(context).push(AppRouter.kLoginView);
           } else if (state is SignupFailure) {
             isLoading = false;
             ShowSnackBar.ShowSnackBarErrMessage(context, state.errMessage);
@@ -159,6 +159,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                                       BlocProvider.of<SignupCubit>(
                                         context,
                                       ).signUp(email, password, name);
+                                    } else {
+                                      setState(() {
+                                        autovalidateMode =
+                                            AutovalidateMode.always;
+                                      });
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(

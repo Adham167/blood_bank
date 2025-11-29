@@ -2,7 +2,7 @@ import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:blood_bank/presentation/widgets/donars_list_view.dart';
 import 'package:blood_bank/presentation/widgets/grid_view_body.dart';
-import 'package:blood_bank/presentation/widgets/note_emergency_body.dart';
+import 'package:blood_bank/features/emergency/presentation/widgets/note_emergency_body.dart';
 import 'package:blood_bank/presentation/widgets/top_body.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

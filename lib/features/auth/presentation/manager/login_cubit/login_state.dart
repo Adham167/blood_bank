@@ -13,4 +13,8 @@ final class LoginFailure extends LoginState {
   LoginFailure({required this.errMessage});
 }
 
-final class LoginSuccess extends LoginState {}
+final class LoginSuccess extends LoginState {
+  final UserEntity userEntity;
+
+  LoginSuccess({required this.userEntity});
+}

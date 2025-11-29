@@ -1,4 +1,5 @@
-import 'package:blood_bank/presentation/views/emergency_view.dart';
+import 'package:blood_bank/core/app/app_colors.dart';
+import 'package:blood_bank/features/emergency/presentation/views/emergency_view.dart';
 import 'package:blood_bank/presentation/views/home_view.dart';
 import 'package:blood_bank/presentation/views/profile_view.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,9 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
-        selectedItemColor: Colors.red,
+        selectedItemColor: AppColors.primary,
         selectedFontSize: 18,
-        unselectedItemColor: Colors.red,
+        unselectedItemColor: AppColors.secondary,
 
         onTap: (index) {
           setState(() {

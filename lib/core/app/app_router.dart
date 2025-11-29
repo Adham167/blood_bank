@@ -1,9 +1,9 @@
 import 'package:blood_bank/features/auth/presentation/views/login_view.dart';
 import 'package:blood_bank/features/auth/presentation/views/signup_view.dart';
-import 'package:blood_bank/presentation/views/blood_bank_view.dart';
+import 'package:blood_bank/features/bloodbanks/presentation/views/blood_bank_view.dart';
 import 'package:blood_bank/presentation/views/doner_view.dart';
 import 'package:blood_bank/presentation/views/donor_profile_view.dart';
-import 'package:blood_bank/presentation/views/emergency_view.dart';
+import 'package:blood_bank/features/emergency/presentation/views/emergency_view.dart';
 import 'package:blood_bank/presentation/views/home_view.dart';
 import 'package:blood_bank/presentation/views/map_view.dart';
 import 'package:blood_bank/presentation/views/onboarding_view.dart';

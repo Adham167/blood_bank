@@ -7,7 +7,8 @@ class CustomTextFormField extends StatelessWidget {
     required this.icon,
     this.obscureText = false,
     this.isEmailField = false,
-    this.onChanged, this.iconButton,
+    this.onChanged,
+    this.iconButton,
   });
 
   final String label;
@@ -47,6 +48,10 @@ class CustomTextFormField extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
         ),
         focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0xffD32F2F), width: 2),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Color(0xffD32F2F), width: 2),
           borderRadius: BorderRadius.circular(14),
         ),
