@@ -1,10 +1,14 @@
+import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
+import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
+import 'package:blood_bank/features/donor/presentation/widgets/show_add_donor_dialog.dart';
 import 'package:blood_bank/presentation/widgets/donars_list_view.dart';
 import 'package:blood_bank/presentation/widgets/grid_view_body.dart';
 import 'package:blood_bank/features/emergency/presentation/widgets/note_emergency_body.dart';
 import 'package:blood_bank/presentation/widgets/top_body.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeView extends StatelessWidget {
@@ -13,6 +17,13 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.primary,
+        onPressed: () {
+          showAddProductDialog(context);
+        },
+        child: Icon(Icons.add, color: AppColors.secondary),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -39,7 +50,18 @@ class HomeView extends StatelessWidget {
                 ],
               ),
             ),
-            DonarsListView(),
+            BlocBuilder<DonorCubit, DonorState>(
+              builder: (context, state) {
+                if (state is DonorLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is DonorFailure) {
+                  return Center(child: Text(state.errMessage));
+                } else if (state is DonorSuccess) {
+                  return DonarsListView(doners: state.doners ?? []);
+                }
+                return const SizedBox();
+              },
+            ),
             SizedBox(height: 64),
           ],
         ),

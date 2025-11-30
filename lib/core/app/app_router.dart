@@ -1,8 +1,9 @@
 import 'package:blood_bank/features/auth/presentation/views/login_view.dart';
 import 'package:blood_bank/features/auth/presentation/views/signup_view.dart';
 import 'package:blood_bank/features/bloodbanks/presentation/views/blood_bank_view.dart';
-import 'package:blood_bank/presentation/views/doner_view.dart';
-import 'package:blood_bank/presentation/views/donor_profile_view.dart';
+import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
+import 'package:blood_bank/features/donor/presentation/views/doner_view.dart';
+import 'package:blood_bank/features/donor/presentation/views/donor_profile_view.dart';
 import 'package:blood_bank/features/emergency/presentation/views/emergency_view.dart';
 import 'package:blood_bank/presentation/views/home_view.dart';
 import 'package:blood_bank/presentation/views/map_view.dart';
@@ -11,6 +12,7 @@ import 'package:blood_bank/presentation/views/profile_view.dart';
 import 'package:blood_bank/presentation/views/splash_view.dart';
 import 'package:blood_bank/presentation/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class AppRouter {
@@ -31,7 +33,14 @@ abstract class AppRouter {
       GoRoute(path: "/", builder: (context, state) => SplashView()),
       GoRoute(path: kLoginView, builder: (context, state) => LoginView()),
       GoRoute(path: kSignUpView, builder: (context, state) => SignUpView()),
-      GoRoute(path: kHomeView, builder: (context, state) => HomeView()),
+      GoRoute(
+        path: kHomeView,
+        builder:
+            (context, state) => MultiBlocProvider(
+              providers: [BlocProvider(create: (context) => DonorCubit()..getDonors())],
+              child: HomeView(),
+            ),
+      ),
       GoRoute(path: kDonerView, builder: (context, state) => DonerView()),
       GoRoute(
         path: kCustomNavigationBar,

@@ -7,7 +7,8 @@ import 'package:blood_bank/presentation/widgets/donars_list_view.dart';
 import 'package:flutter/material.dart';
 
 class DonerView extends StatelessWidget {
-  const DonerView({super.key});
+  DonerView({super.key});
+  String? selectedBloodType;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,11 @@ class DonerView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-                  CustomDropdownButton(),
+                  CustomDropdownButton(
+                    onChanged: (value) {
+                      selectedBloodType = value;
+                    },
+                  ),
                   SizedBox(height: 8),
                   Text(
                     "City / Location",
@@ -55,7 +60,7 @@ class DonerView extends StatelessWidget {
 
                   CustomButton(title: "Search Donors"),
                   Divider(),
-                  DonarsListView(),
+                  // DonarsListView(),
                 ],
               ),
             ],

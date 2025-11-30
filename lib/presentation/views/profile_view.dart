@@ -1,7 +1,8 @@
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:blood_bank/core/utils/custom_text.dart';
-import 'package:blood_bank/presentation/views/donor_profile_view.dart';
+import 'package:blood_bank/features/donor/presentation/widgets/donation_history.dart';
+import 'package:blood_bank/presentation/widgets/edit_profile_section.dart';
 import 'package:flutter/material.dart';
 
 class ProfileView extends StatelessWidget {
@@ -83,47 +84,7 @@ class ProfileView extends StatelessWidget {
                 child: DonationHistory(),
               ),
               SizedBox(height: 16),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: AppColors.secondbackground,
-                    width: 0.5,
-                  ),
-                  color: Color(0xfffafafa),
-                ),
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text(
-                        "Edit Profile",
-                        style: AppStyles.styleBold15.copyWith(
-                          color: AppColors.secondary,
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.password),
-                      title: Text(
-                        "Change Password",
-                        style: AppStyles.styleBold15.copyWith(
-                          color: AppColors.secondary,
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.logout),
-                      title: Text(
-                        "Log Out",
-                        style: AppStyles.styleBold15.copyWith(
-                          color: AppColors.secondary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              EditProfileSection(),
             ],
           ),
         ),

@@ -2,8 +2,8 @@ import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropdownButton extends StatefulWidget {
-  const CustomDropdownButton({super.key});
-
+  const CustomDropdownButton({super.key, required this.onChanged});
+final void Function(String?) onChanged;
   @override
   State<CustomDropdownButton> createState() => _CustomDropdownButtonState();
 }
@@ -32,9 +32,13 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         DropdownMenuItem(value: "AB+", child: Text("AB+")),
         DropdownMenuItem(value: "AB-", child: Text("AB-")),
       ],
-      onChanged: (String? value) {
-        selectedType = value;
+       onChanged: (value) {
+        setState(() {
+          selectedType = value;
+        });
+        widget.onChanged(value); 
       },
+      
     );
   }
 }
