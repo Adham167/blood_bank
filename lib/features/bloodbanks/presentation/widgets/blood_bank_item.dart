@@ -1,14 +1,12 @@
-
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
+import 'package:blood_bank/features/bloodbanks/data/models/blood_bank_model.dart';
 import 'package:blood_bank/features/bloodbanks/presentation/widgets/buttons_blood_bank.dart';
 import 'package:flutter/material.dart';
 
 class BloodBankItem extends StatelessWidget {
-  const BloodBankItem({
-    super.key,
-  });
-
+  const BloodBankItem({super.key, required this.bloodBankModel});
+  final BloodBankModel bloodBankModel;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,10 +22,7 @@ class BloodBankItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "New York Blood center",
-              style: AppStyles.styleBold20,
-            ),
+            Text(bloodBankModel.name, style: AppStyles.styleBold20),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -38,7 +33,7 @@ class BloodBankItem extends StatelessWidget {
                 ),
                 SizedBox(width: 4),
                 Text(
-                  "310 E 67th st, New York",
+                  bloodBankModel.address,
                   style: AppStyles.styleMedium14.copyWith(
                     color: AppColors.secondbackground,
                   ),
@@ -65,25 +60,18 @@ class BloodBankItem extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.watch,
-                  color: AppColors.secondbackground,
-                  size: 18,
-                ),
+                Icon(Icons.watch, color: AppColors.secondbackground, size: 18),
                 SizedBox(width: 4),
                 Text(
-                  "6.7km away",
+                  bloodBankModel.timeLine,
                   style: AppStyles.styleMedium14.copyWith(
                     color: AppColors.secondbackground,
                   ),
                 ),
               ],
             ),
-        
-            Align(
-              alignment: Alignment.center,
-              child: ButtonsBloodBank(),
-            ),
+
+            Align(alignment: Alignment.center, child: ButtonsBloodBank()),
           ],
         ),
       ),
