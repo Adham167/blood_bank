@@ -79,7 +79,11 @@ abstract class AppRouter {
       ),
       GoRoute(
         path: kBloodBankView,
-        builder: (context, state) => BloodBankView(),
+        builder:
+            (context, state) => BlocProvider(
+              create: (context) => DonorCubit(),
+              child: BloodBankView(),
+            ),
       ),
       GoRoute(path: kMapView, builder: (context, state) => MapView()),
       GoRoute(

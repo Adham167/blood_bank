@@ -10,7 +10,9 @@ final class DonorDonationLoaded extends DonorState {
   final List<DonationModel> donations;
   DonorDonationLoaded({required this.donations});
 }
+class DonorAddingDonation extends DonorState {} // ✅ جديد
 
+class DonorDonationAdded extends DonorState {} 
 final class DonorFailure extends DonorState {
   final String errMessage;
 

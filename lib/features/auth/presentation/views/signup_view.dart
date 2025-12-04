@@ -101,7 +101,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: 150),
+                            const SizedBox(height: 80),
                             const Text(
                               'Create Account',
                               style: TextStyle(

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
 part 'donor_state.dart';
+
 class DonorCubit extends Cubit<DonorState> {
   DonorCubit() : super(DonorInitial());
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -15,7 +16,8 @@ class DonorCubit extends Cubit<DonorState> {
     emit(DonorLoading());
     try {
       final snapshot = await _firestore.collection('Users').get();
-      allDonors = snapshot.docs.map((doc) => UserModel.fromJson(doc.data())).toList();
+      allDonors =
+          snapshot.docs.map((doc) => UserModel.fromJson(doc.data())).toList();
       emit(DonorSuccess(doners: allDonors));
     } catch (e) {
       emit(DonorFailure(errMessage: e.toString()));
@@ -29,12 +31,16 @@ class DonorCubit extends Cubit<DonorState> {
   }) async {
     emit(DonorLoading());
     try {
-      final filtered = allDonors.where((user) {
-        final matchBlood = bloodType.isEmpty || user.bloodType == bloodType;
-        final matchLocation = location.isEmpty || 
-            (user.address ?? "").toLowerCase().contains(location.toLowerCase());
-        return matchBlood && matchLocation;
-      }).toList();
+      final filtered =
+          allDonors.where((user) {
+            final matchBlood = bloodType.isEmpty || user.bloodType == bloodType;
+            final matchLocation =
+                location.isEmpty ||
+                (user.address ?? "").toLowerCase().contains(
+                  location.toLowerCase(),
+                );
+            return matchBlood && matchLocation;
+          }).toList();
       emit(DonorSuccess(doners: filtered));
     } catch (e) {
       emit(DonorFailure(errMessage: e.toString()));
@@ -46,7 +52,7 @@ class DonorCubit extends Cubit<DonorState> {
     required String uid,
     required DonationModel donation,
   }) async {
-    emit(DonorLoading());
+    emit(DonorAddingDonation()); // ✅ state جديد
     try {
       // 1. إضافة التبرع الجديد
       await _firestore
@@ -57,9 +63,9 @@ class DonorCubit extends Cubit<DonorState> {
 
       // 2. جلب تاريخ التبرعات المحدث مباشرة
       await getDonationHistoryForUser(uid);
-      
-      // 3. جلب تحديث لقائمة المتبرعين
-      await getDonors();
+
+      // 3. إرسال state نجاح
+      emit(DonorDonationAdded()); // ✅ نجاح الإضافة
     } catch (e) {
       emit(DonorFailure(errMessage: e.toString()));
     }
@@ -69,16 +75,18 @@ class DonorCubit extends Cubit<DonorState> {
   Future<void> getDonationHistoryForUser(String userId) async {
     emit(DonorLoading());
     try {
-      final snapshot = await _firestore
-          .collection('Users')
-          .doc(userId)
-          .collection('donationHistory')
-          .orderBy('time', descending: true) // ترتيب تنازلي للحصول على أحدث تبرع أولاً
-          .get();
+      final snapshot =
+          await _firestore
+              .collection('Users')
+              .doc(userId)
+              .collection('donationHistory')
+              .orderBy('time', descending: true)
+              .get();
 
-      final donations = snapshot.docs
-          .map((doc) => DonationModel.fromMap(doc.data()))
-          .toList();
+      final donations =
+          snapshot.docs
+              .map((doc) => DonationModel.fromMap(doc.data()))
+              .toList();
 
       emit(DonorDonationLoaded(donations: donations));
     } catch (e) {
