@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 class NoteEmergencyBody extends StatelessWidget {
   const NoteEmergencyBody({super.key, required this.emergencyModel});
   final EmergencyModel emergencyModel;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,7 +31,7 @@ class NoteEmergencyBody extends StatelessWidget {
               Row(
                 children: [
                   Icon(Icons.error_outline, color: AppColors.background),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     "URGENT: ${emergencyModel.bloodType} Needed",
                     style: AppStyles.styleBold20.copyWith(
@@ -39,7 +40,7 @@ class NoteEmergencyBody extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 6),
+              const SizedBox(height: 6),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -48,7 +49,7 @@ class NoteEmergencyBody extends StatelessWidget {
                     color: AppColors.background,
                     size: 18,
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
                     emergencyModel.address,
                     style: AppStyles.styleMedium14.copyWith(
@@ -57,30 +58,11 @@ class NoteEmergencyBody extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               GestureDetector(
                 onTap: () async {
-                  final userSnapshot =
-                      await FirebaseFirestore.instance
-                          .collection('Users')
-                          .doc("Sd4oIoj0IIfQ8qIy1XCSpfYV5483")
-                          .get();
-
-                  if (!userSnapshot.exists || userSnapshot.data() == null) {
-                    ShowSnackBar.ShowSnackBarErrMessage(
-                      context,
-                      "User Not Found",
-                    );
-
-                    return;
-                  }
-
-                  final user = UserModel.fromJson(userSnapshot.data()!);
-
-                  GoRouter.of(
-                    context,
-                  ).push(AppRouter.kDonorProfileView, extra: user);
+                  await _handleDonateNow(context);
                 },
                 child: Container(
                   height: 40,
@@ -104,5 +86,44 @@ class NoteEmergencyBody extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _handleDonateNow(BuildContext context) async {
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      // 🔥 البحث في كل المستندات عن الـ uid المناسب
+      final allUsersSnapshot =
+          await FirebaseFirestore.instance.collection('Users').get();
+
+      UserModel? foundUser;
+
+      for (var doc in allUsersSnapshot.docs) {
+        final data = doc.data();
+        if (data['uid'] == emergencyModel.userId) {
+          foundUser = UserModel.fromJson(data);
+          break;
+        }
+      }
+
+      Navigator.of(context).pop();
+
+      if (foundUser == null) {
+        ShowSnackBar.ShowSnackBarErrMessage(
+          context,
+          "Requester not found. ID: ${emergencyModel.userId}",
+        );
+        return;
+      }
+
+      GoRouter.of(context).push(AppRouter.kDonorProfileView, extra: foundUser);
+    } catch (e) {
+      Navigator.of(context).pop();
+      ShowSnackBar.ShowSnackBarErrMessage(context, "Error: ${e.toString()}");
+    }
   }
 }

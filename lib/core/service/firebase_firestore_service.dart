@@ -9,7 +9,20 @@ class FirestoreService implements DataService {
     required String path,
     required Map<String, dynamic> data,
   }) async {
-    await firestore.collection(path).add(data);
+    // 🔥 التصحيح: استخدام doc() بدلاً من add()
+    // path المفروض يكون "Users/user123"
+    if (path.contains('/')) {
+      final parts = path.split('/');
+      if (parts.length >= 2) {
+        // parts[0] = "Users", parts[1] = "user123"
+        await firestore.collection(parts[0]).doc(parts[1]).set(data);
+      } else {
+        throw Exception('Invalid path format: $path');
+      }
+    } else {
+      // إذا كان path بدون document ID (مش مستحسن)
+      await firestore.collection(path).add(data);
+    }
   }
 
   @override
@@ -18,7 +31,6 @@ class FirestoreService implements DataService {
     required String documentId,
   }) async {
     var data = await firestore.collection(path).doc(documentId).get();
-
     return data.data() as Map<String, dynamic>;
   }
 }

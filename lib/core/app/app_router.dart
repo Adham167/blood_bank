@@ -52,10 +52,15 @@ abstract class AppRouter {
       GoRoute(
         path: kDonerView,
         builder: (context, state) {
-          final data = state.extra as Map<String, dynamic>;
+          final data =
+              state.extra != null ? state.extra as Map<String, dynamic> : {};
+
           return BlocProvider(
             create: (context) => DonorCubit()..getDonors(),
-            child: DonerView(initialBloodType: data['type']??"", initialLocation: data['location']??""),
+            child: DonerView(
+              initialBloodType: data['type'] ?? "",
+              initialLocation: data['location'] ?? "",
+            ),
           );
         },
       ),
@@ -88,7 +93,8 @@ abstract class AppRouter {
         builder: (context, state) {
           final donor = state.extra as UserModel;
           return BlocProvider(
-            create: (context) => DonorCubit()..getDonationHistoryForUser(donor.uid),
+            create:
+                (context) => DonorCubit()..getDonationHistoryForUser(donor.uid),
             child: DonorProfileView(doner: donor),
           );
         },

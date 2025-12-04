@@ -1,121 +1,198 @@
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
-import 'package:blood_bank/core/utils/custom_dropdown_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class TopBody extends StatelessWidget {
- TopBody({super.key});
-String? selectedType;
-TextEditingController _searchKey = TextEditingController();
+  TopBody({super.key});
+
+  String? selectedType;
+  final TextEditingController _searchKey = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.primary,
       width: double.infinity,
-      height: 220,
-
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 32,
-              right: 32,
-              top: 64,
-              bottom: 32,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "BloodConnect",
-                  style: AppStyles.styleBold24.copyWith(
-                    color: AppColors.background,
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            // 👤 App Bar
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "BloodConnect",
+                    style: AppStyles.styleBold24.copyWith(
+                      color: AppColors.background,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.notifications_outlined,
-                    color: AppColors.background,
-                    size: 26,
+                  CircleAvatar(
+                    backgroundColor: AppColors.background.withOpacity(0.2),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.notifications_outlined,
+                        color: AppColors.background,
+                        size: 22,
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28.0),
-            child: Container(
-              height: 50,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: AppColors.background.withOpacity(0.5),
+                ],
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      height: 30,
-                      width: 135,
-                      decoration: BoxDecoration(
-                        color: AppColors.background,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: CustomDropdownButton(onChanged: (value)=>selectedType = value)
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 3),
-                    Container(
-                      height: 30,
-                      width: 145,
-                      decoration: BoxDecoration(
-                        color: AppColors.background,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: TextField(
-                            controller: _searchKey,
-                          )
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 3),
-                    GestureDetector(
-                      onTap: () => GoRouter.of(context).push(AppRouter.kDonerView,
-                    
-                      extra: {
-                        'type':selectedType,
-                        'location':_searchKey.text,
-                      },),
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          color: AppColors.background,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Icon(Icons.search, size: 18),
-                      ),
+            ),
+
+            // 🔍 Search Bar
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: AppColors.background,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Row(
+                    children: [
+                      // Blood Type
+                      Expanded(
+                        child: Container(
+                          height: 46,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                hint: Text(
+                                  "Blood Type",
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: AppColors.primary,
+                                ),
+                                value: selectedType,
+                                items:
+                                    [
+                                      "A+",
+                                      "A-",
+                                      "B+",
+                                      "B-",
+                                      "O+",
+                                      "O-",
+                                      "AB+",
+                                      "AB-",
+                                    ].map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          "🩸 $value",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[800],
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                onChanged: (value) {
+                                  selectedType = value;
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      VerticalDivider(
+                        thickness: 1,
+                        width: 1,
+                        color: Colors.grey[300],
+                      ),
+
+                      // Location
+                      Expanded(
+                        child: Container(
+                          height: 46,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: TextField(
+                              controller: _searchKey,
+                              decoration: InputDecoration(
+                                hintText: "Location",
+                                hintStyle: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 16,
+                                ),
+                                border: InputBorder.none,
+                                suffixIcon: Icon(
+                                  Icons.location_on_outlined,
+                                  color: Colors.grey[500],
+                                  size: 18,
+                                ),
+                              ),
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Search Button
+                      Container(
+                        width: 46,
+                        height: 46,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            if (selectedType == null ||
+                                _searchKey.text.isEmpty) {
+                              return;
+                            }
+
+                            GoRouter.of(context).push(
+                              AppRouter.kDonerView,
+                              extra: {
+                                'type': selectedType,
+                                'location': _searchKey.text,
+                              },
+                            );
+                          },
+                          icon: Icon(
+                            Icons.search,
+                            color: AppColors.background,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -5,15 +5,17 @@ import 'package:blood_bank/features/donor/presentation/widgets/donation_history.
 import 'package:blood_bank/features/donor/presentation/widgets/profile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:intl/intl.dart'; // لإضافة تنسيق التاريخ
 class DonorProfileView extends StatelessWidget {
   const DonorProfileView({super.key, required this.doner});
   final UserModel doner;
 
   @override
   Widget build(BuildContext context) {
-    // أول ما الصفحة تتحمل، نجلب الـ donations الخاصة باليوزر
-    // context.read<DonorCubit>().getDonationHistoryForUser(doner.uid);
+    // استدعاء تاريخ التبرعات عند تحميل الصفحة
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DonorCubit>().getDonationHistoryForUser(doner.uid);
+    });
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -30,60 +32,97 @@ class DonorProfileView extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            ProfileCard(doner: doner),
-            const SizedBox(height: 20),
-            ContactButtons(donerModel: doner),
-            const SizedBox(height: 20),
+      body: BlocListener<DonorCubit, DonorState>(
+        listener: (context, state) {
+          // الاستماع للتغييرات وإعادة تحميل البيانات عند إضافة تبرع جديد
+          if (state is DonorDonationLoaded) {
+            // يمكن إضافة أي إجراء إضافي هنا
+          }
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              ProfileCard(doner: doner),
+              const SizedBox(height: 20),
+              ContactButtons(donerModel: doner),
+              const SizedBox(height: 20),
 
-            // BlocBuilder لعرض الدونيشن هيستوري وحالة التبرع
-            BlocBuilder<DonorCubit, DonorState>(
-              builder: (context, state) {
-                if (state is DonorLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is DonorFailure) {
-                  return Text('Error: ${state.errMessage}');
-                } else if (state is DonorDonationLoaded) {
-                  final donations = state.donations;
+              // BlocBuilder لعرض الدونيشن هيستوري وحالة التبرع
+              BlocBuilder<DonorCubit, DonorState>(
+                builder: (context, state) {
+                  if (state is DonorLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is DonorFailure) {
+                    return Text('Error: ${state.errMessage}');
+                  } else if (state is DonorDonationLoaded) {
+                    final donations = state.donations;
 
-                  final lastDonationDate =
-                      donations.isNotEmpty ? donations.last.time : null;
+                    // التحقق مما إذا كانت هناك تبرعات
+                    if (donations.isEmpty) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Available for donation",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          DonationHistory(donationHistory: donations),
+                        ],
+                      );
+                    }
 
-                  final available =
-                      lastDonationDate == null
-                          ? true
-                          : DateTime.now()
-                                  .difference(lastDonationDate)
-                                  .inHours >=
-                              2;
+                    // أخذ آخر تبرع (الأول في القائمة بعد الترتيب التنازلي)
+                    final lastDonationDate = donations.first.time;
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        available
-                            ? "Available for donation"
-                            : "Not available yet",
-                        style: TextStyle(
-                          color: available ? Colors.green : Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                    // حساب إذا مر 8 أسابيع (56 يوم) منذ آخر تبرع
+                    // أو يمكنك استخدام 8 أسابيع = 56 يوم = 1344 ساعة
+                    final differenceInDays = DateTime.now().difference(lastDonationDate).inDays;
+                    final available = differenceInDays >= 56; // 8 أسابيع
+
+                    // بدلاً من ذلك، يمكنك استخدام:
+                    // final differenceInWeeks = DateTime.now().difference(lastDonationDate).inDays ~/ 7;
+                    // final available = differenceInWeeks >= 8;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          available ? "Available for donation" : "Not available yet",
+                          style: TextStyle(
+                            color: available ? Colors.green : Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 12),
+                        if (!available) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            "Last donation: ${DateFormat('dd/MM/yyyy').format(lastDonationDate)}",
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                          Text(
+                            "Can donate again after: ${DateFormat('dd/MM/yyyy').format(lastDonationDate.add(const Duration(days: 56)))}",
+                            style: const TextStyle(color: Colors.orange),
+                          ),
+                        ],
+                        const SizedBox(height: 12),
 
-                      DonationHistory(donationHistory: donations),
-                    ],
-                  );
-                } else {
-                  return const SizedBox();
-                }
-              },
-            ),
-          ],
+                        DonationHistory(donationHistory: donations),
+                      ],
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

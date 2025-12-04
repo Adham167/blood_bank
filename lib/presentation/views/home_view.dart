@@ -29,21 +29,24 @@ class HomeView extends StatelessWidget {
           children: [
             TopBody(),
             SizedBox(height: 28),
+            // في صفحة الهوم
             BlocBuilder<EmergencyCubit, EmergencyState>(
               builder: (context, state) {
-                if (state is EmergencyFailure) {
-                  return Center(child: Text(state.errMessage));
-                } else if (state is EmergencyLoading) {
+                if (state is EmergencyLoading) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (state is EmergencySuccess &&
-                    state.emergencyModel != null) {
+                } else if (state is EmergencySuccess) {
                   return NoteEmergencyBody(
                     emergencyModel: state.emergencyModel,
                   );
+                } else if (state is EmergencyEmpty) {
+                  return _buildNoEmergencies();
+                } else if (state is EmergencyFailure) {
+                  return Text('Error: ${state.errMessage}');
                 }
                 return const SizedBox();
               },
             ),
+
             SizedBox(height: 8),
             GridViewBody(),
             SizedBox(height: 16),
@@ -77,6 +80,35 @@ class HomeView extends StatelessWidget {
               },
             ),
             SizedBox(height: 64),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoEmergencies() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey[100],
+        ),
+        child: Column(
+          children: [
+            Icon(Icons.check_circle_outline, color: Colors.green, size: 48),
+            SizedBox(height: 12),
+            Text(
+              "No Active Emergencies",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "All blood needs are currently met",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[600]),
+            ),
           ],
         ),
       ),

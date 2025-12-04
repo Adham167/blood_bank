@@ -24,7 +24,7 @@ class EmergencyCubit extends Cubit<EmergencyState> {
           await _firestore
               .collection('Emergencies')
               .orderBy('time', descending: true)
-              .limit(1) // هنا بنجيب أحدث مستند بس
+              .limit(1) // بنجيب أحدث حالة طوارئ فقط
               .get();
 
       if (snapshot.docs.isNotEmpty) {

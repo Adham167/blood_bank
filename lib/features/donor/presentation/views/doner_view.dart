@@ -12,7 +12,11 @@ class DonerView extends StatefulWidget {
   final String? initialBloodType;
   final String? initialLocation;
 
-  const DonerView({super.key, this.initialBloodType, this.initialLocation});
+  const DonerView({
+    super.key,
+    this.initialBloodType = "O-",
+    this.initialLocation = "cairo",
+  });
 
   @override
   State<DonerView> createState() => _DonerViewState();
@@ -22,11 +26,29 @@ class _DonerViewState extends State<DonerView> {
   String? selectedBloodType;
   TextEditingController locationController = TextEditingController();
 
+  final List<String> allowedBloodTypes = [
+    "A+",
+    "A-",
+    "B+",
+    "B-",
+    "O+",
+    "O-",
+    "AB+",
+    "AB-",
+  ];
+
   @override
   void initState() {
     super.initState();
 
-    selectedBloodType = widget.initialBloodType;
+    // التعامل الصحيح مع القيمة الابتدائية
+    if (widget.initialBloodType != null &&
+        allowedBloodTypes.contains(widget.initialBloodType)) {
+      selectedBloodType = widget.initialBloodType;
+    } else {
+      selectedBloodType = null;
+    }
+
     locationController.text = widget.initialLocation ?? "";
   }
 
@@ -39,7 +61,7 @@ class _DonerViewState extends State<DonerView> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
         title: const Text(
-          "Search Doner",
+          "Search Donor",
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -60,8 +82,8 @@ class _DonerViewState extends State<DonerView> {
               ),
               const SizedBox(height: 8),
 
-              // ← هنا استخدمنا القيمة الابتدائية
               CustomDropdownButton(
+                // items: allowedBloodTypes, // ← إضافة العناصر هنا
                 selectedValue: selectedBloodType,
                 onChanged: (value) {
                   setState(() {
@@ -79,7 +101,6 @@ class _DonerViewState extends State<DonerView> {
               ),
               const SizedBox(height: 8),
 
-              // ← هنا حطينا الـ initialLocation
               CustomTextField(
                 controller: locationController,
                 hintText: "Enter City Name",
@@ -90,7 +111,14 @@ class _DonerViewState extends State<DonerView> {
               CustomButton(
                 title: "Search Donors",
                 onTap: () {
-                  /// هتعمل الفلترة هنا بعدين
+                  // Filter will be added here
+                  if (selectedBloodType != null &&
+                      locationController.text.isNotEmpty) {
+                    context.read<DonorCubit>().filterDonors(
+                      bloodType: selectedBloodType!,
+                      location: locationController.text.trim(),
+                    );
+                  }
                 },
               ),
 

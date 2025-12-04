@@ -1,82 +1,88 @@
 import 'package:bloc/bloc.dart';
 import 'package:blood_bank/features/auth/data/models/user.dart';
 import 'package:blood_bank/features/donor/data/donation_model.dart';
-import 'package:blood_bank/features/donor/data/doner_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
 part 'donor_state.dart';
-
 class DonorCubit extends Cubit<DonorState> {
   DonorCubit() : super(DonorInitial());
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<UserModel> allDonors = [];
 
-  // Future<void> addDonor(DonerModel doner) async {
-  //   emit(DonorLoading());
-  //   try {
-  //     await _firestore.collection("Donors").add(doner.toMap());
-  //     final snapshot = await _firestore.collection('Donors').get();
-
-  //     final data =
-  //         snapshot.docs.map((doc) {
-  //           return DonerModel.fromMap(doc.data(), doc.id);
-  //         }).toList();
-  //     emit(DonorSuccess(doners: data));
-  //   } catch (e) {
-  //     emit(DonorFailure(errMessage: e.toString()));
-  //   }
-  // }
-
+  /// Get all donors (Users)
   Future<void> getDonors() async {
     emit(DonorLoading());
     try {
       final snapshot = await _firestore.collection('Users').get();
-
-      final data =
-          snapshot.docs.map((doc) {
-            return UserModel.fromJson(doc.data());
-          }).toList();
-
-      emit(DonorSuccess(doners: data));
+      allDonors = snapshot.docs.map((doc) => UserModel.fromJson(doc.data())).toList();
+      emit(DonorSuccess(doners: allDonors));
     } catch (e) {
       emit(DonorFailure(errMessage: e.toString()));
     }
   }
 
+  /// Filter donors by bloodType + location
+  Future<void> filterDonors({
+    required String bloodType,
+    required String location,
+  }) async {
+    emit(DonorLoading());
+    try {
+      final filtered = allDonors.where((user) {
+        final matchBlood = bloodType.isEmpty || user.bloodType == bloodType;
+        final matchLocation = location.isEmpty || 
+            (user.address ?? "").toLowerCase().contains(location.toLowerCase());
+        return matchBlood && matchLocation;
+      }).toList();
+      emit(DonorSuccess(doners: filtered));
+    } catch (e) {
+      emit(DonorFailure(errMessage: e.toString()));
+    }
+  }
+
+  /// Add donation record for a specific user
   Future<void> addDonationToUser({
     required String uid,
     required DonationModel donation,
   }) async {
-    emit(DonorLoading()); // لو عايز تظهر لودنج أثناء الإضافة
+    emit(DonorLoading());
     try {
-      // ضيف الدونيشن في sub-collection جوه اليوزر
+      // 1. إضافة التبرع الجديد
       await _firestore
           .collection('Users')
           .doc(uid)
-          .collection('donationHistory') // أو donations حسب ما تحب
+          .collection("donationHistory")
           .add(donation.toMap());
 
-      // بعد ما نضيف ممكن نجيب كل اليوزرس تاني لو حابب
+      // 2. جلب تاريخ التبرعات المحدث مباشرة
+      await getDonationHistoryForUser(uid);
+      
+      // 3. جلب تحديث لقائمة المتبرعين
       await getDonors();
     } catch (e) {
       emit(DonorFailure(errMessage: e.toString()));
     }
   }
 
+  /// Load donation history for user
   Future<void> getDonationHistoryForUser(String userId) async {
-  emit(DonorLoading());
-  try {
-    final snapshot = await _firestore
-        .collection('Users')
-        .doc(userId)
-        .collection('donationHistory')
-        .get();
+    emit(DonorLoading());
+    try {
+      final snapshot = await _firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('donationHistory')
+          .orderBy('time', descending: true) // ترتيب تنازلي للحصول على أحدث تبرع أولاً
+          .get();
 
-    final donations = snapshot.docs.map((doc) => DonationModel.fromMap(doc.data())).toList();
-    emit(DonorDonationLoaded(donations: donations));
-  } catch (e) {
-    emit(DonorFailure(errMessage: e.toString()));
+      final donations = snapshot.docs
+          .map((doc) => DonationModel.fromMap(doc.data()))
+          .toList();
+
+      emit(DonorDonationLoaded(donations: donations));
+    } catch (e) {
+      emit(DonorFailure(errMessage: e.toString()));
+    }
   }
-}
-
 }
