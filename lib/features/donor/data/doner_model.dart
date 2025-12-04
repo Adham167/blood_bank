@@ -2,6 +2,7 @@ import 'package:blood_bank/features/donor/data/donation_model.dart';
 
 class DonerModel {
   final String name;
+  final String? id;
   final String bloodType;
   final String phone;
   final String address;
@@ -9,6 +10,7 @@ class DonerModel {
 
   DonerModel({
     required this.name,
+    this.id,
     required this.bloodType,
     required this.phone,
     required this.address,
@@ -24,8 +26,9 @@ class DonerModel {
     };
   }
 
-  factory DonerModel.fromMap(Map<String, dynamic> map) {
+  factory DonerModel.fromMap(Map<String, dynamic> map, String docId) {
     return DonerModel(
+      id: docId,
       name: map['name'] ?? "",
       bloodType: map['bloodType'] ?? "",
       phone: map['phone'] ?? "",

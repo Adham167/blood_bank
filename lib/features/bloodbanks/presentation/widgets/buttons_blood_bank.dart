@@ -12,7 +12,7 @@ class ButtonsBloodBank extends StatelessWidget {
       children: [
         Container(
           height: 30,
-          width: 140,
+          width: MediaQuery.of(context).size.width / 4,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
             border: Border.all(width: 1, color: Colors.black),
@@ -36,7 +36,7 @@ class ButtonsBloodBank extends StatelessWidget {
         SizedBox(width: 16),
         Container(
           height: 30,
-          width: 140,
+          width: MediaQuery.of(context).size.width / 4,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
             color: AppColors.primary,
@@ -45,6 +45,26 @@ class ButtonsBloodBank extends StatelessWidget {
             child: Text(
               "Directions",
               style: AppStyles.styleBold15.copyWith(color: Colors.white),
+            ),
+          ),
+        ),
+        SizedBox(width: 16),
+        GestureDetector(
+          onTap: () {
+            
+          },
+          child: Container(
+            height: 30,
+            width: MediaQuery.of(context).size.width / 4,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              color: Colors.green,
+            ),
+            child: Center(
+              child: Text(
+                "Confirm",
+                style: AppStyles.styleBold15.copyWith(color: Colors.white),
+              ),
             ),
           ),
         ),

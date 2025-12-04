@@ -1,10 +1,17 @@
 import 'package:blood_bank/core/app/app_colors.dart';
+import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:blood_bank/core/utils/custom_dropdown_button.dart';
+import 'package:blood_bank/features/emergency/data/models/emergency_model.dart';
+import 'package:blood_bank/features/emergency/presentation/manager/emergency_cubit/emergency_cubit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class BloodRequestForm extends StatelessWidget {
-   BloodRequestForm({super.key});
+  BloodRequestForm({super.key});
 
   String? selectedBloodType;
 
@@ -41,20 +48,26 @@ class BloodRequestForm extends StatelessWidget {
           // Location Field
           const Text("Your Location"),
           const SizedBox(height: 6),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-            decoration: BoxDecoration(
-              color: const Color(0xfff0f0f0),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: const [
-                Icon(Icons.location_on, color: Colors.grey),
-                SizedBox(width: 8),
-                Expanded(child: Text("Using default location (New York)")),
-              ],
-            ),
+
+          TextField(
+            controller: _addressController,
+            decoration: InputDecoration(labelText: "Enter Your Location"),
           ),
+
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          //   decoration: BoxDecoration(
+          //     color: const Color(0xfff0f0f0),
+          //     borderRadius: BorderRadius.circular(8),
+          //   ),
+          //   child: Row(
+          //     children: const [
+          //       Icon(Icons.location_on, color: Colors.grey),
+          //       SizedBox(width: 8),
+          //       Expanded(child: Text("Using default location (New York)")),
+          //     ],
+          //   ),
+          // ),
           const SizedBox(height: 16),
           // Additional Notes
           const Text("Additional Notes (Optional)"),
@@ -75,7 +88,20 @@ class BloodRequestForm extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                final currentUser = FirebaseAuth.instance.currentUser;
+                final userId = currentUser?.uid;
+                BlocProvider.of<EmergencyCubit>(context).addEmergency(
+                  EmergencyModel(
+                    userId: userId!,
+                    bloodType: selectedBloodType!,
+                    details: _notesController.text,
+                    address: _addressController.text,
+                    time: Timestamp.now(),
+                  ),
+                );
+                GoRouter.of(context).push(AppRouter.kHomeView);
+              },
               icon: const Icon(
                 Icons.error_outline,
                 color: AppColors.background,

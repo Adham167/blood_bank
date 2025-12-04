@@ -1,10 +1,14 @@
 import 'package:blood_bank/core/app/app_colors.dart';
+import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
+import 'package:blood_bank/core/utils/custom_dropdown_button.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class TopBody extends StatelessWidget {
-  const TopBody({super.key});
-
+ TopBody({super.key});
+String? selectedType;
+TextEditingController _searchKey = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -67,16 +71,7 @@ class TopBody extends StatelessWidget {
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Row(
-                            children: [
-                              Text("Type", style: AppStyles.styleRegular14),
-                              Spacer(),
-                              Transform.rotate(
-                                angle: -1.571,
-                                child: Icon(Icons.arrow_back_ios, size: 16),
-                              ),
-                            ],
-                          ),
+                          child: CustomDropdownButton(onChanged: (value)=>selectedType = value)
                         ),
                       ),
                     ),
@@ -91,28 +86,29 @@ class TopBody extends StatelessWidget {
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.location_on, size: 16),
-                              Spacer(),
-                              Text(
-                                "Loacation",
-                                style: AppStyles.styleRegular14,
-                              ),
-                            ],
-                          ),
+                          child: TextField(
+                            controller: _searchKey,
+                          )
                         ),
                       ),
                     ),
                     SizedBox(width: 3),
-                    Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: AppColors.background,
-                        borderRadius: BorderRadius.circular(6),
+                    GestureDetector(
+                      onTap: () => GoRouter.of(context).push(AppRouter.kDonerView,
+                    
+                      extra: {
+                        'type':selectedType,
+                        'location':_searchKey.text,
+                      },),
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: AppColors.background,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Icon(Icons.search, size: 18),
                       ),
-                      child: Icon(Icons.search, size: 18),
                     ),
                   ],
                 ),

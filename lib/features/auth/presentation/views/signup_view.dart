@@ -1,6 +1,7 @@
 import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/app/di/service_locator.dart';
 import 'package:blood_bank/core/constants/show_snack_bar.dart';
+import 'package:blood_bank/core/utils/custom_dropdown_button.dart';
 import 'package:blood_bank/features/auth/domain/repos/auth_repo.dart';
 import 'package:blood_bank/features/auth/presentation/manager/signup_cubit/signup_cubit.dart';
 import 'package:blood_bank/presentation/widgets/custom_text_form_field.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -50,8 +52,15 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  Future<void> saveUserData(String name, String email, String phone) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_name', name);
+    await prefs.setString('user_email', email);
+    await prefs.setString('user_phone', phone);
+  }
+
   bool isLoading = false;
-  late String name, phone, email, password;
+  late String name, phone, email, password, address, bloodType;
   GlobalKey<FormState> globalKey = GlobalKey();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   @override
@@ -65,6 +74,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               context,
               "Creating Account Successfully",
             );
+            saveUserData(name, email, phone);
             GoRouter.of(context).push(AppRouter.kLoginView);
           } else if (state is SignupFailure) {
             isLoading = false;
@@ -127,6 +137,18 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                             ),
                             const SizedBox(height: 16),
                             CustomTextFormField(
+                              label: "address",
+                              icon: Icon(Icons.directions),
+                              onChanged: (data) => address = data,
+                            ),
+                            const SizedBox(height: 16),
+                            CustomDropdownButton(
+                              onChanged: (value) {
+                                bloodType = value!;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            CustomTextFormField(
                               label: "Password",
                               obscureText: _obscure,
                               icon: Icon(Icons.lock_outlined),
@@ -158,7 +180,14 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                                       globalKey.currentState!.save();
                                       BlocProvider.of<SignupCubit>(
                                         context,
-                                      ).signUp(email, password, name);
+                                      ).signUp(
+                                        email,
+                                        password,
+                                        name,
+                                        phone,
+                                        bloodType,
+                                        address,
+                                      );
                                     } else {
                                       setState(() {
                                         autovalidateMode =

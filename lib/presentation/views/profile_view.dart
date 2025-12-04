@@ -1,12 +1,35 @@
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:blood_bank/core/utils/custom_text.dart';
-import 'package:blood_bank/features/donor/presentation/widgets/donation_history.dart';
 import 'package:blood_bank/presentation/widgets/edit_profile_section.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
+
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  String name = '';
+  String email = '';
+  String phone = '';
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('user_name') ?? '';
+      email = prefs.getString('user_email') ?? '';
+      phone = prefs.getString('user_phone') ?? '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +76,9 @@ class ProfileView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomText(text1: "Name: ", text2: "Adham"),
-                      CustomText(text1: "Phone: ", text2: "01030541645"),
-                      CustomText(
-                        text1: "Email: ",
-                        text2: "adhamabdelsalam3040@gmail.com",
-                      ),
+                      CustomText(text1: "Name: ", text2: name),
+                      CustomText(text1: "Phone: ", text2: phone),
+                      CustomText(text1: "Email: ", text2: email),
                     ],
                   ),
                 ),
@@ -81,7 +101,7 @@ class ProfileView extends StatelessWidget {
                     width: 0.5,
                   ),
                 ),
-                child: DonationHistory(),
+                // child: DonationHistory(donationModel: don,),
               ),
               SizedBox(height: 16),
               EditProfileSection(),

@@ -37,10 +37,13 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
 
     // Navigate to Login after 2 seconds
     Future.delayed(Duration(seconds: 2), () {
-      if (FirebaseAuth.instance.currentUser != null)
-        return GoRouter.of(context).pushReplacement(AppRouter.kHomeView);
-      else
+      // if (FirebaseAuth.instance.currentUser != null) {
+      //   return GoRouter.of(
+      //     context,
+      //   ).pushReplacement(AppRouter.kCustomNavigationBar);
+      // } else {
         return GoRouter.of(context).pushReplacement(AppRouter.kOnboardingView);
+     //}
     });
   }
 

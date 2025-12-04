@@ -1,9 +1,12 @@
+import 'package:blood_bank/features/auth/data/models/user.dart';
 import 'package:blood_bank/features/auth/presentation/views/login_view.dart';
 import 'package:blood_bank/features/auth/presentation/views/signup_view.dart';
 import 'package:blood_bank/features/bloodbanks/presentation/views/blood_bank_view.dart';
+import 'package:blood_bank/features/donor/data/doner_model.dart';
 import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
 import 'package:blood_bank/features/donor/presentation/views/doner_view.dart';
 import 'package:blood_bank/features/donor/presentation/views/donor_profile_view.dart';
+import 'package:blood_bank/features/emergency/presentation/manager/emergency_cubit/emergency_cubit.dart';
 import 'package:blood_bank/features/emergency/presentation/views/emergency_view.dart';
 import 'package:blood_bank/presentation/views/home_view.dart';
 import 'package:blood_bank/presentation/views/map_view.dart';
@@ -37,14 +40,37 @@ abstract class AppRouter {
         path: kHomeView,
         builder:
             (context, state) => MultiBlocProvider(
-              providers: [BlocProvider(create: (context) => DonorCubit()..getDonors())],
+              providers: [
+                BlocProvider(create: (context) => DonorCubit()..getDonors()),
+                BlocProvider(
+                  create: (context) => EmergencyCubit()..getLatestEmergency(),
+                ),
+              ],
               child: HomeView(),
             ),
       ),
-      GoRoute(path: kDonerView, builder: (context, state) => DonerView()),
+      GoRoute(
+        path: kDonerView,
+        builder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+          return BlocProvider(
+            create: (context) => DonorCubit()..getDonors(),
+            child: DonerView(initialBloodType: data['type']??"", initialLocation: data['location']??""),
+          );
+        },
+      ),
       GoRoute(
         path: kCustomNavigationBar,
-        builder: (context, state) => CustomNavigationBar(),
+        builder:
+            (context, state) => MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (context) => DonorCubit()..getDonors()),
+                BlocProvider(
+                  create: (context) => EmergencyCubit()..getLatestEmergency(),
+                ),
+              ],
+              child: CustomNavigationBar(),
+            ),
       ),
       GoRoute(
         path: kBloodBankView,
@@ -58,7 +84,14 @@ abstract class AppRouter {
       GoRoute(path: kProfileView, builder: (context, state) => ProfileView()),
       GoRoute(
         path: kDonorProfileView,
-        builder: (context, state) => DonorProfileView(),
+
+        builder: (context, state) {
+          final donor = state.extra as UserModel;
+          return BlocProvider(
+            create: (context) => DonorCubit()..getDonationHistoryForUser(donor.uid),
+            child: DonorProfileView(doner: donor),
+          );
+        },
       ),
       GoRoute(
         path: kOnboardingView,

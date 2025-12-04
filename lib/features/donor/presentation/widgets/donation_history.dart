@@ -1,10 +1,10 @@
-
+import 'package:blood_bank/features/donor/data/donation_model.dart';
 import 'package:blood_bank/features/donor/presentation/widgets/donation_tile.dart';
 import 'package:flutter/material.dart';
 
 class DonationHistory extends StatelessWidget {
-  const DonationHistory({super.key});
-
+  const DonationHistory({super.key, required this.donationHistory});
+  final List<DonationModel> donationHistory;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,7 +24,7 @@ class DonationHistory extends StatelessWidget {
           ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: 4,
+            itemCount: donationHistory.length,
             separatorBuilder:
                 (context, index) => const Divider(
                   thickness: 2,
@@ -32,7 +32,7 @@ class DonationHistory extends StatelessWidget {
                   height: 1,
                 ),
             itemBuilder: (context, index) {
-              return const DonationTile();
+              return DonationTile(donationModel: donationHistory[index]);
             },
           ),
         ],

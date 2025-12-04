@@ -63,16 +63,16 @@ void showAddProductDialog(BuildContext context) {
           ),
           TextButton(
             onPressed: () {
-              BlocProvider.of<DonorCubit>(context).addDonor(
-                DonerModel(
-                  name: nameController.text,
-                  bloodType: selectedBloodType!,
-                  phone: phoneController.text,
-                  address: addressController.text,
-                  donationHistory: [],
-                ),
-              );
-              GoRouter.of(context).pop();
+              // BlocProvider.of<DonorCubit>(context).addDonor(
+              //   DonerModel(
+              //     name: nameController.text,
+              //     bloodType: selectedBloodType!,
+              //     phone: phoneController.text,
+              //     address: addressController.text,
+              //     donationHistory: [],
+              //   ),
+              // );
+              // GoRouter.of(context).pop();
             },
             child: Text("Add", style: TextStyle(color: AppColors.primary)),
           ),

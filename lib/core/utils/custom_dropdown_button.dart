@@ -1,27 +1,19 @@
-import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class CustomDropdownButton extends StatefulWidget {
-  const CustomDropdownButton({super.key, required this.onChanged});
-final void Function(String?) onChanged;
-  @override
-  State<CustomDropdownButton> createState() => _CustomDropdownButtonState();
-}
+class CustomDropdownButton extends StatelessWidget {
+  final String? selectedValue;
+  final Function(String?) onChanged;
 
-class _CustomDropdownButtonState extends State<CustomDropdownButton> {
-  String? selectedType;
+  const CustomDropdownButton({
+    super.key,
+    required this.onChanged,
+    this.selectedValue,
+  });
+
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      decoration: InputDecoration(
-        hintText: "All blood Type",
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.primary),
-        ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
-        contentPadding: EdgeInsets.all(8),
-      ),
-      value: selectedType,
+      value: selectedValue,
       items: const [
         DropdownMenuItem(value: "A+", child: Text("A+")),
         DropdownMenuItem(value: "A-", child: Text("A-")),
@@ -32,13 +24,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         DropdownMenuItem(value: "AB+", child: Text("AB+")),
         DropdownMenuItem(value: "AB-", child: Text("AB-")),
       ],
-       onChanged: (value) {
-        setState(() {
-          selectedType = value;
-        });
-        widget.onChanged(value); 
-      },
-      
+      onChanged: onChanged,
     );
   }
 }

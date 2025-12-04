@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class CustomDonorButton extends StatelessWidget {
@@ -6,6 +5,7 @@ class CustomDonorButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
   final bool isFilled;
+  final Color color;
 
   const CustomDonorButton({
     super.key,
@@ -13,16 +13,19 @@ class CustomDonorButton extends StatelessWidget {
     required this.icon,
     required this.onTap,
     this.isFilled = false,
+    this.color = Colors.white,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+
       child: Container(
+        width: MediaQuery.of(context).size.width / 2.35,
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: isFilled ? const Color(0xffc22222) : Colors.transparent,
+          color: isFilled ? color : Colors.transparent,
           border: Border.all(color: const Color(0xfff0f0ee), width: 2),
           borderRadius: BorderRadius.circular(8),
         ),

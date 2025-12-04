@@ -1,13 +1,14 @@
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
-import 'package:blood_bank/features/donor/data/doner_model.dart';
+import 'package:blood_bank/features/auth/data/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class DonarsListView extends StatelessWidget {
-  const DonarsListView({super.key, required this.doners});
-  final List<DonerModel> doners;
+  const DonarsListView({super.key, required this.doners, this.showAll = false});
+  final List<UserModel> doners;
+  final bool showAll;
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -16,7 +17,7 @@ class DonarsListView extends StatelessWidget {
       itemBuilder: (context, index) {
         final donor = doners[index];
         return ListTile(
-          onTap: () => GoRouter.of(context).push(AppRouter.kDonorProfileView),
+          onTap: () => GoRouter.of(context).push(AppRouter.kDonorProfileView,extra: donor),
           leading: CircleAvatar(
             radius: 40,
             backgroundColor: AppColors.primary.withOpacity(0.1),
@@ -71,7 +72,12 @@ class DonarsListView extends StatelessWidget {
         );
       },
       separatorBuilder: (context, index) => const SizedBox(height: 8),
-      itemCount: doners.length > 5 ? 5 : doners.length,
+      itemCount:
+          !showAll
+              ? doners.length > 5
+                  ? 5
+                  : doners.length
+              : doners.length,
     );
   }
 }

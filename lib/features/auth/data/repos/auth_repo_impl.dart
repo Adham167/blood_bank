@@ -22,6 +22,9 @@ class AuthRepoImpl extends AuthRepo {
     String email,
     String password,
     String name,
+    String phone,
+    String bloodType,
+    String address,
   ) async {
     User? user;
     try {
@@ -29,7 +32,14 @@ class AuthRepoImpl extends AuthRepo {
         email: email,
         password: password,
       );
-      var userEntity = UserEntity(name: name, uid: user.uid, email: email);
+      var userEntity = UserEntity(
+        name: name,
+        uid: user.uid,
+        email: email,
+        phone: phone,
+        bloodType: bloodType,
+        address: address,
+      );
       await addUserData(user: userEntity);
       return right(userEntity);
     } on CustomException catch (e) {
@@ -70,7 +80,7 @@ class AuthRepoImpl extends AuthRepo {
 
   @override
   Future<UserEntity> getUserData({required String uid}) async {
-    var userData= await dataService.getData(
+    var userData = await dataService.getData(
       path: BackendEndpoint.getUserData,
       documentId: uid,
     );

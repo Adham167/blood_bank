@@ -1,10 +1,16 @@
 import 'package:blood_bank/core/app/app_colors.dart';
+import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
+import 'package:blood_bank/core/constants/show_snack_bar.dart';
+import 'package:blood_bank/features/auth/data/models/user.dart';
+import 'package:blood_bank/features/emergency/data/models/emergency_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class NoteEmergencyBody extends StatelessWidget {
-  const NoteEmergencyBody({super.key});
-
+  const NoteEmergencyBody({super.key, required this.emergencyModel});
+  final EmergencyModel emergencyModel;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,8 +32,10 @@ class NoteEmergencyBody extends StatelessWidget {
                   Icon(Icons.error_outline, color: AppColors.background),
                   SizedBox(width: 8),
                   Text(
-                    "URGENT: B+ Needed",
-                    style: AppStyles.styleBold20.copyWith(color:AppColors.background),
+                    "URGENT: ${emergencyModel.bloodType} Needed",
+                    style: AppStyles.styleBold20.copyWith(
+                      color: AppColors.background,
+                    ),
                   ),
                 ],
               ),
@@ -42,26 +50,52 @@ class NoteEmergencyBody extends StatelessWidget {
                   ),
                   SizedBox(width: 4),
                   Text(
-                    "5.3Km away.Manhattan ",
+                    emergencyModel.address,
                     style: AppStyles.styleMedium14.copyWith(
-                      color:AppColors.background,
+                      color: AppColors.background,
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 12),
 
-              Container(
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppColors.background,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Center(
-                  child: Text(
-                    "Donate Now",
-                    style: AppStyles.styleMedium16.copyWith(color:AppColors.primary),
+              GestureDetector(
+                onTap: () async {
+                  final userSnapshot =
+                      await FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc("Sd4oIoj0IIfQ8qIy1XCSpfYV5483")
+                          .get();
+
+                  if (!userSnapshot.exists || userSnapshot.data() == null) {
+                    ShowSnackBar.ShowSnackBarErrMessage(
+                      context,
+                      "User Not Found",
+                    );
+
+                    return;
+                  }
+
+                  final user = UserModel.fromJson(userSnapshot.data()!);
+
+                  GoRouter.of(
+                    context,
+                  ).push(AppRouter.kDonorProfileView, extra: user);
+                },
+                child: Container(
+                  height: 40,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Donate Now",
+                      style: AppStyles.styleMedium16.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
                   ),
                 ),
               ),
