@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:blood_bank/features/auth/data/models/user.dart';
 import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
 import 'package:blood_bank/features/donor/presentation/widgets/contact_buttons.dart';
@@ -6,13 +8,15 @@ import 'package:blood_bank/features/donor/presentation/widgets/profile_card.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart'; // لإضافة تنسيق التاريخ
+
 class DonorProfileView extends StatelessWidget {
   const DonorProfileView({super.key, required this.doner});
   final UserModel doner;
 
   @override
   Widget build(BuildContext context) {
-    // استدعاء تاريخ التبرعات عند تحميل الصفحة
+    log("Doner prifile view  ${doner.uid}");
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<DonorCubit>().getDonationHistoryForUser(doner.uid);
     });
@@ -34,10 +38,7 @@ class DonorProfileView extends StatelessWidget {
       ),
       body: BlocListener<DonorCubit, DonorState>(
         listener: (context, state) {
-          // الاستماع للتغييرات وإعادة تحميل البيانات عند إضافة تبرع جديد
-          if (state is DonorDonationLoaded) {
-            // يمكن إضافة أي إجراء إضافي هنا
-          }
+          if (state is DonorDonationLoaded) {}
         },
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -48,7 +49,6 @@ class DonorProfileView extends StatelessWidget {
               ContactButtons(donerModel: doner),
               const SizedBox(height: 20),
 
-              // BlocBuilder لعرض الدونيشن هيستوري وحالة التبرع
               BlocBuilder<DonorCubit, DonorState>(
                 builder: (context, state) {
                   if (state is DonorLoading) {
@@ -77,23 +77,19 @@ class DonorProfileView extends StatelessWidget {
                       );
                     }
 
-                    // أخذ آخر تبرع (الأول في القائمة بعد الترتيب التنازلي)
                     final lastDonationDate = donations.first.time;
 
-                    // حساب إذا مر 8 أسابيع (56 يوم) منذ آخر تبرع
-                    // أو يمكنك استخدام 8 أسابيع = 56 يوم = 1344 ساعة
-                    final differenceInDays = DateTime.now().difference(lastDonationDate).inDays;
-                    final available = differenceInDays >= 56; // 8 أسابيع
-
-                    // بدلاً من ذلك، يمكنك استخدام:
-                    // final differenceInWeeks = DateTime.now().difference(lastDonationDate).inDays ~/ 7;
-                    // final available = differenceInWeeks >= 8;
+                    final differenceInDays =
+                        DateTime.now().difference(lastDonationDate).inDays;
+                    final available = differenceInDays >= 56;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          available ? "Available for donation" : "Not available yet",
+                          available
+                              ? "Available for donation"
+                              : "Not available yet",
                           style: TextStyle(
                             color: available ? Colors.green : Colors.red,
                             fontWeight: FontWeight.bold,

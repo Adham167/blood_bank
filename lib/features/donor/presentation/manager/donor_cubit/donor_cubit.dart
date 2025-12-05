@@ -11,7 +11,6 @@ class DonorCubit extends Cubit<DonorState> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<UserModel> allDonors = [];
 
-  /// Get all donors (Users)
   Future<void> getDonors() async {
     emit(DonorLoading());
     try {
@@ -24,7 +23,6 @@ class DonorCubit extends Cubit<DonorState> {
     }
   }
 
-  /// Filter donors by bloodType + location
   Future<void> filterDonors({
     required String bloodType,
     required String location,
@@ -47,33 +45,27 @@ class DonorCubit extends Cubit<DonorState> {
     }
   }
 
-  /// Add donation record for a specific user
   Future<void> addDonationToUser({
     required String uid,
     required DonationModel donation,
   }) async {
-    emit(DonorAddingDonation()); // ✅ state جديد
+    emit(DonorAddingDonation());
     try {
-      // 1. إضافة التبرع الجديد
       await _firestore
           .collection('Users')
           .doc(uid)
           .collection("donationHistory")
           .add(donation.toMap());
 
-      // 2. جلب تاريخ التبرعات المحدث مباشرة
       await getDonationHistoryForUser(uid);
 
-      // 3. إرسال state نجاح
-      emit(DonorDonationAdded()); // ✅ نجاح الإضافة
+      emit(DonorDonationAdded());
     } catch (e) {
       emit(DonorFailure(errMessage: e.toString()));
     }
   }
 
-  /// Load donation history for user
   Future<void> getDonationHistoryForUser(String userId) async {
-    emit(DonorLoading());
     try {
       final snapshot =
           await _firestore

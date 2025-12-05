@@ -2,7 +2,6 @@ import 'package:blood_bank/features/auth/data/models/user.dart';
 import 'package:blood_bank/features/auth/presentation/views/login_view.dart';
 import 'package:blood_bank/features/auth/presentation/views/signup_view.dart';
 import 'package:blood_bank/features/bloodbanks/presentation/views/blood_bank_view.dart';
-import 'package:blood_bank/features/donor/data/doner_model.dart';
 import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
 import 'package:blood_bank/features/donor/presentation/views/doner_view.dart';
 import 'package:blood_bank/features/donor/presentation/views/donor_profile_view.dart';
@@ -11,7 +10,7 @@ import 'package:blood_bank/features/emergency/presentation/views/emergency_view.
 import 'package:blood_bank/presentation/views/home_view.dart';
 import 'package:blood_bank/presentation/views/map_view.dart';
 import 'package:blood_bank/presentation/views/onboarding_view.dart';
-import 'package:blood_bank/presentation/views/profile_view.dart';
+import 'package:blood_bank/features/profile/presentation/view/profile_view.dart';
 import 'package:blood_bank/presentation/views/splash_view.dart';
 import 'package:blood_bank/presentation/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +68,7 @@ abstract class AppRouter {
         builder:
             (context, state) => MultiBlocProvider(
               providers: [
-                BlocProvider(create: (context) => DonorCubit()..getDonors()),
+                // BlocProvider(create: (context) => DonorCubit()..getDonors()),
                 BlocProvider(
                   create: (context) => EmergencyCubit()..getLatestEmergency(),
                 ),

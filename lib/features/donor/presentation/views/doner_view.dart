@@ -1,8 +1,8 @@
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
-import 'package:blood_bank/core/utils/custom_button.dart';
-import 'package:blood_bank/core/utils/custom_dropdown_button.dart';
-import 'package:blood_bank/core/utils/custom_text_field.dart';
+import 'package:blood_bank/core/utils/widgets/custom_button.dart';
+import 'package:blood_bank/core/utils/widgets/custom_dropdown_button.dart';
+import 'package:blood_bank/core/utils/widgets/custom_text_field.dart';
 import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
 import 'package:blood_bank/features/donor/presentation/widgets/donars_list_view.dart';
 import 'package:flutter/material.dart';

@@ -17,92 +17,98 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-             TopBody(),
-            const SizedBox(height: 28),
-            
-            // 🚨 Emergency Section
-            BlocBuilder<EmergencyCubit, EmergencyState>(
-              builder: (context, state) {
-                if (state is EmergencyLoading) {
+    return BlocProvider(
+      create: (context) => DonorCubit()..getDonors(),
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              TopBody(),
+              const SizedBox(height: 28),
+
+              // 🚨 Emergency Section
+              BlocBuilder<EmergencyCubit, EmergencyState>(
+                builder: (context, state) {
+                  if (state is EmergencyLoading) {
+                    return _buildEmergencyLoading();
+                  } else if (state is EmergencySuccess) {
+                    return Column(
+                      children: [
+                        NoteEmergencyBody(emergencyModel: state.emergencyModel),
+                        const SizedBox(height: 8),
+                      ],
+                    );
+                  } else if (state is EmergencyEmpty) {
+                    return _buildNoEmergencies();
+                  } else if (state is EmergencyFailure) {
+                    return _buildEmergencyError(state);
+                  }
+                  // حالة Initial - نستدعي جلب البيانات
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.read<EmergencyCubit>().getLatestEmergency();
+                  });
                   return _buildEmergencyLoading();
-                } else if (state is EmergencySuccess) {
-                  return Column(
-                    children: [
-                      NoteEmergencyBody(emergencyModel: state.emergencyModel),
-                      const SizedBox(height: 8),
-                    ],
-                  );
-                } else if (state is EmergencyEmpty) {
-                  return _buildNoEmergencies();
-                } else if (state is EmergencyFailure) {
-                  return _buildEmergencyError(state);
-                }
-                // حالة Initial - نستدعي جلب البيانات
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  context.read<EmergencyCubit>().getLatestEmergency();
-                });
-                return _buildEmergencyLoading();
-              },
-            ),
-
-            // 🏥 Services Grid
-             GridViewBody(),
-            const SizedBox(height: 24),
-
-            // 👥 Nearby Donors Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  Text(
-                    "Nearby Donors",
-                    style: AppStyles.styleBold18.copyWith(color: Colors.black),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () => GoRouter.of(context).push(AppRouter.kDonerView),
-                    child: Text("View All", style: AppStyles.styleSemiBold12),
-                  ),
-                ],
+                },
               ),
-            ),
-            const SizedBox(height: 8),
 
-            // 🔄 Nearby Donors List
-            BlocBuilder<DonorCubit, DonorState>(
-              builder: (context, state) {
-                // استدعاء البيانات أول مرة فقط
-                if (state is DonorInitial) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.read<DonorCubit>().getDonors();
-                  });
-                }
+              // 🏥 Services Grid
+              GridViewBody(),
+              const SizedBox(height: 24),
 
-                if (state is DonorLoading) {
+              // 👥 Nearby Donors Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "Nearby Donors",
+                      style: AppStyles.styleBold18.copyWith(
+                        color: Colors.black,
+                      ),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      onPressed:
+                          () => GoRouter.of(context).push(AppRouter.kDonerView),
+                      child: Text("View All", style: AppStyles.styleSemiBold12),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // 🔄 Nearby Donors List
+              BlocBuilder<DonorCubit, DonorState>(
+                builder: (context, state) {
+                  // استدعاء البيانات أول مرة فقط
+                  if (state is DonorInitial) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      context.read<DonorCubit>().getDonors();
+                    });
+                  }
+
+                  if (state is DonorLoading) {
+                    return _buildDonorsLoading();
+                  } else if (state is DonorFailure) {
+                    return _buildDonorsError(context, state);
+                  } else if (state is DonorSuccess) {
+                    return _buildDonorsList(state);
+                  } else if (state is DonorDonationLoaded) {
+                    // إذا كان في حالة DonorDonationLoaded، نرجع للـ DonorSuccess
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      context.read<DonorCubit>().getDonors();
+                    });
+                    return _buildDonorsLoading();
+                  }
+
+                  // أي حالة أخرى
                   return _buildDonorsLoading();
-                } else if (state is DonorFailure) {
-                  return _buildDonorsError(context, state);
-                } else if (state is DonorSuccess) {
-                  return _buildDonorsList(state);
-                } else if (state is DonorDonationLoaded) {
-                  // إذا كان في حالة DonorDonationLoaded، نرجع للـ DonorSuccess
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.read<DonorCubit>().getDonors();
-                  });
-                  return _buildDonorsLoading();
-                }
-                
-                // أي حالة أخرى
-                return _buildDonorsLoading();
-              },
-            ),
-            
-            const SizedBox(height: 32),
-          ],
+                },
+              ),
+
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );
@@ -182,10 +188,7 @@ class HomeView extends StatelessWidget {
                     state.errMessage.length > 60
                         ? "${state.errMessage.substring(0, 60)}..."
                         : state.errMessage,
-                    style: TextStyle(
-                      color: Colors.orange[600],
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.orange[600], fontSize: 12),
                   ),
                 ],
               ),
@@ -203,7 +206,7 @@ class HomeView extends StatelessWidget {
   // 👥 Donors List
   Widget _buildDonorsList(DonorSuccess state) {
     final donors = state.doners ?? [];
-    
+
     if (donors.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -220,19 +223,13 @@ class HomeView extends StatelessWidget {
               const SizedBox(height: 12),
               const Text(
                 "No Donors Found",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 8),
               const Text(
                 "Try adjusting your search criteria",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 13,
-                ),
+                style: TextStyle(color: Colors.grey, fontSize: 13),
               ),
             ],
           ),
@@ -280,7 +277,11 @@ class HomeView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Icon(Icons.check_circle_outline, color: Colors.green[600], size: 48),
+            Icon(
+              Icons.check_circle_outline,
+              color: Colors.green[600],
+              size: 48,
+            ),
             const SizedBox(height: 12),
             Text(
               "No Active Emergencies",

@@ -1,7 +1,7 @@
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/features/emergency/presentation/views/emergency_view.dart';
 import 'package:blood_bank/presentation/views/home_view.dart';
-import 'package:blood_bank/presentation/views/profile_view.dart';
+import 'package:blood_bank/features/profile/presentation/view/profile_view.dart';
 import 'package:flutter/material.dart';
 
 class CustomNavigationBar extends StatefulWidget {

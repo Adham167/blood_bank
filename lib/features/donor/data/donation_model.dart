@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class DonationModel {
   final DateTime time;
   final String address;
@@ -9,12 +11,16 @@ class DonationModel {
     required this.donationType,
   });
   Map<String, dynamic> toMap() {
-    return {'time': time.toIso8601String(), 'address': address, 'donationType': donationType};
+    return {
+      'time': Timestamp.fromDate(time),
+      'address': address,
+      'donationType': donationType,
+    };
   }
 
   factory DonationModel.fromMap(Map<String, dynamic> map) {
     return DonationModel(
-      time: DateTime.parse(map['time']),
+      time: (map['time'] as Timestamp).toDate(),
       address: map['address'],
       donationType: map['donationType'],
     );

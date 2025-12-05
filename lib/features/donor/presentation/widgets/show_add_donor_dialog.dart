@@ -1,9 +1,6 @@
 import 'package:blood_bank/core/app/app_colors.dart';
-import 'package:blood_bank/core/utils/custom_dropdown_button.dart';
-import 'package:blood_bank/features/donor/data/doner_model.dart';
-import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
+import 'package:blood_bank/core/utils/widgets/custom_dropdown_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 void showAddProductDialog(BuildContext context) {
