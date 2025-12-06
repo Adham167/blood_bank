@@ -4,20 +4,23 @@ import 'package:blood_bank/features/home/presentation/view/home_view.dart';
 import 'package:blood_bank/features/profile/presentation/view/profile_view.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/app/di/app_key.dart';
+
 class CustomNavigationBar extends StatefulWidget {
   const CustomNavigationBar({super.key});
 
   @override
-  State<CustomNavigationBar> createState() => _CustomNavigationBarState();
+  State<CustomNavigationBar> createState() => CustomNavigationBarState();
 }
 
-class _CustomNavigationBarState extends State<CustomNavigationBar> {
+class CustomNavigationBarState extends State<CustomNavigationBar> {
   int selectedIndex = 0;
   List<Widget> items = [HomeView(), EmergencyView(), ProfileView()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: navBarKey,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         selectedItemColor: AppColors.primary,
@@ -38,7 +41,10 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
-      body: IndexedStack(index: selectedIndex, children: items),
+      body: IndexedStack(
+          index: selectedIndex,
+          children: items
+      ),
     );
   }
 }

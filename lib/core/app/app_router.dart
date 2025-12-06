@@ -1,6 +1,7 @@
 import 'package:blood_bank/features/auth/data/models/user.dart';
 import 'package:blood_bank/features/auth/presentation/views/login_view.dart';
 import 'package:blood_bank/features/auth/presentation/views/signup_view.dart';
+import 'package:blood_bank/features/bloodbanks/presentation/manager/getBloodBankcubit/getbloodbank_cubit.dart';
 import 'package:blood_bank/features/bloodbanks/presentation/views/blood_bank_view.dart';
 import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
 import 'package:blood_bank/features/donor/presentation/views/doner_view.dart';
@@ -8,7 +9,6 @@ import 'package:blood_bank/features/donor/presentation/views/donor_profile_view.
 import 'package:blood_bank/features/emergency/presentation/manager/emergency_cubit/emergency_cubit.dart';
 import 'package:blood_bank/features/emergency/presentation/views/emergency_view.dart';
 import 'package:blood_bank/features/home/presentation/view/home_view.dart';
-import 'package:blood_bank/presentation/views/map_view.dart';
 import 'package:blood_bank/presentation/views/onboarding_view.dart';
 import 'package:blood_bank/features/profile/presentation/view/profile_view.dart';
 import 'package:blood_bank/presentation/views/splash_view.dart';
@@ -16,6 +16,8 @@ import 'package:blood_bank/presentation/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../features/map/presentation/views/map_view.dart';
 
 abstract class AppRouter {
   static String kLoginView = "/LoginView";
@@ -84,7 +86,15 @@ abstract class AppRouter {
               child: BloodBankView(),
             ),
       ),
-      GoRoute(path: kMapView, builder: (context, state) => MapView()),
+      GoRoute(
+        path: kMapView,
+        builder: (context, state) {
+          return BlocProvider(
+            create: (_) => GetBloodBankCubit()..getBloodBanks(),
+            child: const MapView(),
+          );
+        },
+      ),
       GoRoute(
         path: kEmergencyView,
         builder: (context, state) => EmergencyView(),

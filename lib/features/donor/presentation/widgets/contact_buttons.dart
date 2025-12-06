@@ -1,4 +1,5 @@
 import 'package:blood_bank/core/app/app_colors.dart';
+import 'package:blood_bank/core/utils/helper_function/custom_launch_url.dart';
 import 'package:blood_bank/features/auth/data/models/user.dart';
 import 'package:blood_bank/features/donor/data/donation_model.dart';
 import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
@@ -22,7 +23,9 @@ class ContactButtons extends StatelessWidget {
                 text: "Call",
                 icon: Icons.call,
                 isFilled: true,
-                onTap: () {},
+                onTap: () {
+                  //customLaunchUrl(context, 'tel:${donerModel.phone}');
+                },
               ),
             ),
             const SizedBox(width: 12),
@@ -30,7 +33,9 @@ class ContactButtons extends StatelessWidget {
               child: CustomDonorButton(
                 text: "Message",
                 icon: Icons.message,
-                onTap: () {},
+                onTap: () {
+                //  customLaunchUrl(context, 'sms:${donerModel.phone}?body=Hello');
+                },
                 isFilled: false,
               ),
             ),

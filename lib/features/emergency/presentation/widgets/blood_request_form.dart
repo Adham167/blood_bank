@@ -112,7 +112,7 @@ class BloodRequestForm extends StatelessWidget {
                   "Emergency request sent successfully!"
                 );
                 
-                GoRouter.of(context).push(AppRouter.kHomeView);
+                GoRouter.of(context).pop();
               },
               icon: const Icon(
                 Icons.error_outline,

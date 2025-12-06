@@ -86,7 +86,7 @@ class BloodBankItem extends StatelessWidget {
             ),
 
             // زرار
-            Align(alignment: Alignment.center, child: ButtonsBloodBank(bloodBankName: bloodBankModel.name,)),
+            Align(alignment: Alignment.center, child: ButtonsBloodBank(bloodBankModel: bloodBankModel,)),
           ],
         ),
       ),

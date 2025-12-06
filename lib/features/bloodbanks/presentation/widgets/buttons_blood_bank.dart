@@ -1,16 +1,19 @@
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
+import 'package:blood_bank/features/bloodbanks/data/models/blood_bank_model.dart';
 import 'package:blood_bank/features/donor/data/donation_model.dart';
 import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/utils/helper_function/custom_launch_url.dart';
+
 class ButtonsBloodBank extends StatelessWidget {
-  const ButtonsBloodBank({super.key, required this.bloodBankName});
+  const ButtonsBloodBank({super.key, required this.bloodBankModel});
 
-  final String bloodBankName;
-
+  //final String bloodBankName;
+final BloodBankModel bloodBankModel;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -27,7 +30,7 @@ class ButtonsBloodBank extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () {
-                // TODO: Implement call functionality
+            //    customLaunchUrl(context, 'tel:${bloodBankModel.phone}');
               },
               child: Center(
                 child: Row(
@@ -115,7 +118,7 @@ class ButtonsBloodBank extends StatelessWidget {
     // إنشاء DonationModel جديد
     final newDonation = DonationModel(
       time: DateTime.now(),
-      address: bloodBankName, // اسم البنك كعنوان للتبرع
+      address: bloodBankModel.name, // اسم البنك كعنوان للتبرع
       donationType: "Blood Bank Donation",
       // يمكنك إضافة المزيد من البيانات
       // location: bloodBankAddress,
@@ -152,7 +155,7 @@ class ButtonsBloodBank extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Did you donate at $bloodBankName?"),
+                Text("Did you donate at ${bloodBankModel.name}?"),
                 const SizedBox(height: 8),
                 const Text(
                   "This will add a donation record to your history.",
@@ -189,7 +192,7 @@ class ButtonsBloodBank extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                "Donation recorded at $bloodBankName",
+                "Donation recorded at ${bloodBankModel.name}",
                 style: const TextStyle(fontSize: 14),
               ),
             ),
