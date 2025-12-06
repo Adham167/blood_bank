@@ -1,4 +1,3 @@
-
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_router.dart';
 import 'package:flutter/material.dart';
@@ -25,24 +24,16 @@ class SearchButtonWidget extends StatelessWidget {
       ),
       child: IconButton(
         onPressed: () {
-          if (selectedType == null ||
-              _searchKey.text.isEmpty) {
+          if (selectedType == null || _searchKey.text.isEmpty) {
             return;
           }
-    
+
           GoRouter.of(context).push(
             AppRouter.kDonerView,
-            extra: {
-              'type': selectedType,
-              'location': _searchKey.text,
-            },
+            extra: {'type': selectedType, 'location': _searchKey.text.trim()},
           );
         },
-        icon: Icon(
-          Icons.search,
-          color: AppColors.background,
-          size: 20,
-        ),
+        icon: Icon(Icons.search, color: AppColors.background, size: 20),
       ),
     );
   }

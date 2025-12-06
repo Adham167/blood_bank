@@ -7,19 +7,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/utils/helper_function/custom_launch_url.dart';
 
 class ButtonsBloodBank extends StatelessWidget {
   const ButtonsBloodBank({super.key, required this.bloodBankModel});
 
-  //final String bloodBankName;
 final BloodBankModel bloodBankModel;
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // 📞 Call Button
         Expanded(
           child: Container(
             height: 40,
@@ -52,7 +49,6 @@ final BloodBankModel bloodBankModel;
         ),
         const SizedBox(width: 12),
 
-        // 🗺️ Directions Button
         Expanded(
           child: Container(
             height: 40,
@@ -63,8 +59,6 @@ final BloodBankModel bloodBankModel;
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () {
-                // TODO: Implement directions functionality
-                // يمكنك استخدام: url_launcher لفتح Google Maps
               },
               child: Center(
                 child: Text(
@@ -77,7 +71,6 @@ final BloodBankModel bloodBankModel;
         ),
         const SizedBox(width: 12),
 
-        // ✅ Confirm Donation Button
         Expanded(
           child: Container(
             height: 40,
@@ -111,22 +104,16 @@ final BloodBankModel bloodBankModel;
       return;
     }
 
-    // إظهار تأكيد
     final confirmed = await _showConfirmationDialog(context);
     if (!confirmed) return;
 
-    // إنشاء DonationModel جديد
     final newDonation = DonationModel(
       time: DateTime.now(),
-      address: bloodBankModel.name, // اسم البنك كعنوان للتبرع
+      address: bloodBankModel.name, 
       donationType: "Blood Bank Donation",
-      // يمكنك إضافة المزيد من البيانات
-      // location: bloodBankAddress,
-      // bloodBankId: bloodBankId,
     );
 
     try {
-      // إضافة التبرع للمستخدم الحالي
       await BlocProvider.of<DonorCubit>(
         context,
       ).addDonationToUser(uid: currentUser.uid, donation: newDonation);

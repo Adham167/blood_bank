@@ -11,5 +11,5 @@ abstract class AuthRepo {
   );
   Future<Either<Failure, UserEntity>> signIn(String email, String password);
   Future addUserData({required UserEntity user});
-  Future<UserEntity> getUserData({required String uid});
+  Future<UserEntity> getUserData( {required String uid});
 }

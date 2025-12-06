@@ -1,11 +1,11 @@
 import 'package:blood_bank/core/app/app_colors.dart';
-import 'package:blood_bank/core/utils/helper_function/custom_launch_url.dart';
 import 'package:blood_bank/features/auth/data/models/user.dart';
 import 'package:blood_bank/features/donor/data/donation_model.dart';
 import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
 import 'package:blood_bank/features/donor/presentation/widgets/custom_donor_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class ContactButtons extends StatelessWidget {
@@ -34,7 +34,7 @@ class ContactButtons extends StatelessWidget {
                 text: "Message",
                 icon: Icons.message,
                 onTap: () {
-                //  customLaunchUrl(context, 'sms:${donerModel.phone}?body=Hello');
+                  //  customLaunchUrl(context, 'sms:${donerModel.phone}?body=Hello');
                 },
                 isFilled: false,
               ),
@@ -49,7 +49,6 @@ class ContactButtons extends StatelessWidget {
           text: "Confirm",
           isFilled: true,
           onTap: () async {
-            // تحقق أولاً من حالة المتبرع
             final cubit = BlocProvider.of<DonorCubit>(context);
             final currentState = cubit.state;
 
@@ -62,7 +61,6 @@ class ContactButtons extends StatelessWidget {
                     DateTime.now().difference(lastDonationDate).inDays;
 
                 if (differenceInDays < 56) {
-                  // غير مسموح بالتبرع بعد
                   showDialog(
                     context: context,
                     builder:
@@ -85,12 +83,10 @@ class ContactButtons extends StatelessWidget {
               }
             }
 
-            // إذا كان متاحاً للتبرع
             final newDonation = DonationModel(
               time: DateTime.now(),
               address: donerModel.address,
               donationType: donerModel.bloodType,
-              // يمكنك إضافة المزيد من البيانات إذا لزم
             );
 
             await cubit.addDonationToUser(
@@ -98,13 +94,13 @@ class ContactButtons extends StatelessWidget {
               donation: newDonation,
             );
 
-            // إظهار رسالة نجاح
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text("Donation recorded successfully!"),
                 backgroundColor: Colors.green,
               ),
             );
+            GoRouter.of(context).pop();
           },
         ),
       ],

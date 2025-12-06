@@ -10,6 +10,7 @@ class DonationModel {
     required this.address,
     required this.donationType,
   });
+
   Map<String, dynamic> toMap() {
     return {
       'time': Timestamp.fromDate(time),
@@ -19,10 +20,21 @@ class DonationModel {
   }
 
   factory DonationModel.fromMap(Map<String, dynamic> map) {
+    final timeData = map['time'];
+    DateTime parsedTime;
+
+    if (timeData is Timestamp) {
+      parsedTime = timeData.toDate();
+    } else if (timeData is String) {
+      parsedTime = DateTime.tryParse(timeData) ?? DateTime.now();
+    } else {
+      parsedTime = DateTime.now();
+    }
+
     return DonationModel(
-      time: (map['time'] as Timestamp).toDate(),
-      address: map['address'],
-      donationType: map['donationType'],
+      time: parsedTime,
+      address: map['address'] ?? '',
+      donationType: map['donationType'] ?? '',
     );
   }
 }

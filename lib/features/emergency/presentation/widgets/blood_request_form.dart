@@ -1,5 +1,4 @@
 import 'package:blood_bank/core/app/app_colors.dart';
-import 'package:blood_bank/core/app/app_router.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:blood_bank/core/constants/show_snack_bar.dart';
 import 'package:blood_bank/core/utils/widgets/custom_dropdown_button.dart';
@@ -78,7 +77,6 @@ class BloodRequestForm extends StatelessWidget {
                 final currentUser = FirebaseAuth.instance.currentUser;
                 final userId = currentUser?.uid;
                 
-                // ✅ التحقق من البيانات قبل الإرسال
                 if (selectedBloodType == null || selectedBloodType!.isEmpty) {
                   ShowSnackBar.ShowSnackBarErrMessage(
                     context, 
@@ -95,10 +93,9 @@ class BloodRequestForm extends StatelessWidget {
                   return;
                 }
 
-                // ✅ إرسال حالة الطوارئ مع userId اليوزر الحالي
                 BlocProvider.of<EmergencyCubit>(context).addEmergency(
                   EmergencyModel(
-                    userId: userId!, // ✅ تخزين ID المستخدم الحالي
+                    userId: userId!,
                     bloodType: selectedBloodType!,
                     details: _notesController.text,
                     address: _addressController.text,
@@ -106,7 +103,6 @@ class BloodRequestForm extends StatelessWidget {
                   ),
                 );
                 
-                // ✅ إظهار رسالة نجاح
                 ShowSnackBar.ShowSnackBarMessage(
                   context, 
                   "Emergency request sent successfully!"

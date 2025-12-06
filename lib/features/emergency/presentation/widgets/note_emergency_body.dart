@@ -96,7 +96,6 @@ class NoteEmergencyBody extends StatelessWidget {
         builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
-      // 🔥 البحث في كل المستندات عن الـ uid المناسب
       final allUsersSnapshot =
           await FirebaseFirestore.instance.collection('Users').get();
 

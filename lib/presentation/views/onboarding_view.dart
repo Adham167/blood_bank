@@ -24,7 +24,7 @@ class _OnboardingViewState extends State<OnboardingView> {
     {
       "title": "Find Nearby Centers",
       "subtitle": "Locate the closest blood donation center easily.",
-      "image": Assets.imagesOnboarding2,
+      "image": Assets.imagesDownload,
     },
     {
       "title": "Book Appointments",

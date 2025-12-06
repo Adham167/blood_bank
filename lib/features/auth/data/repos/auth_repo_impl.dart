@@ -73,7 +73,6 @@ class AuthRepoImpl extends AuthRepo {
   @override
   Future addUserData({required UserEntity user}) async {
   await dataService.addData(
-    // 🔥 التصحيح: إضافة uid في الـ path
     path: "${BackendEndpoint.addUserData}/${user.uid}",
     data: user.toMap(),
   );
@@ -81,9 +80,8 @@ class AuthRepoImpl extends AuthRepo {
   @override
   Future<UserEntity> getUserData({required String uid}) async {
   var userData = await dataService.getData(
-    // 🔥 التصحيح: نفس الشيء
     path: BackendEndpoint.getUserData,
-    documentId: uid, // ✅ هنا documentId = uid
+    documentId: uid, 
   );
   return UserModel.fromJson(userData);
 }

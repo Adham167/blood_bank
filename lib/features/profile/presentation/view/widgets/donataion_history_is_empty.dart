@@ -42,7 +42,6 @@ class DonataionHistoryIsEmpty extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // يمكنك إضافة navigation إلى صفحة التبرع
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,

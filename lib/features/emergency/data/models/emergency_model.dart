@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EmergencyModel {
-  final String userId; // ✅ ID المستخدم الذي طلب حالة الطوارئ
+  final String userId;
   final String bloodType;
   final String details;
   final String address;

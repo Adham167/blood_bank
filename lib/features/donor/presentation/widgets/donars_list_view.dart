@@ -1,9 +1,7 @@
-import 'package:blood_bank/core/app/app_colors.dart';
-import 'package:blood_bank/core/app/app_router.dart';
-import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:blood_bank/features/auth/data/models/user.dart';
+import 'package:blood_bank/features/donor/presentation/widgets/donor_list_view_item.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class DonarsListView extends StatelessWidget {
   const DonarsListView({super.key, required this.doners, this.showAll = false});
@@ -15,61 +13,12 @@ class DonarsListView extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
+        final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
         final donor = doners[index];
-        return ListTile(
-          onTap: () => GoRouter.of(context).push(AppRouter.kDonorProfileView,extra: donor),
-          leading: CircleAvatar(
-            radius: 40,
-            backgroundColor: AppColors.primary.withOpacity(0.1),
-            child: Text(
-              donor.name[0],
-              style: AppStyles.styleBold18.copyWith(color: AppColors.primary),
-            ),
-          ),
-          title: Row(
-            children: [
-              Text(
-                donor.name,
-                style: AppStyles.styleBold16.copyWith(color: Colors.black),
-              ),
-              SizedBox(width: 6),
-              Container(
-                height: 25,
-                width: 40,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Center(
-                  child: Text(
-                    donor.bloodType,
-                    style: AppStyles.styleBold15.copyWith(
-                      color: AppColors.background,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          subtitle: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.location_on_outlined,
-                color: AppColors.secondbackground,
-                size: 18,
-              ),
-              SizedBox(width: 4),
-              Text(
-                donor.address,
-                style: AppStyles.styleMedium13.copyWith(
-                  color: AppColors.secondbackground,
-                ),
-              ),
-            ],
-          ),
-          trailing: IconButton(onPressed: () {}, icon: Icon(Icons.call)),
-        );
+        final isMe = donor.uid == currentUserId;
+
+        return DonorListViewItem(donor: donor, isMe: isMe);
       },
       separatorBuilder: (context, index) => const SizedBox(height: 8),
       itemCount:

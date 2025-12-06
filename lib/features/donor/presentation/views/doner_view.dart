@@ -1,10 +1,11 @@
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_styles.dart';
+import 'package:blood_bank/core/utils/widgets/custom_app_bar.dart';
 import 'package:blood_bank/core/utils/widgets/custom_button.dart';
 import 'package:blood_bank/core/utils/widgets/custom_dropdown_button.dart';
 import 'package:blood_bank/core/utils/widgets/custom_text_field.dart';
 import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
-import 'package:blood_bank/features/donor/presentation/widgets/donars_list_view.dart';
+import 'package:blood_bank/features/donor/presentation/widgets/search_bloc_builder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -41,7 +42,6 @@ class _DonerViewState extends State<DonerView> {
   void initState() {
     super.initState();
 
-    // التعامل الصحيح مع القيمة الابتدائية
     if (widget.initialBloodType != null &&
         allowedBloodTypes.contains(widget.initialBloodType)) {
       selectedBloodType = widget.initialBloodType;
@@ -56,19 +56,7 @@ class _DonerViewState extends State<DonerView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xfffafafa),
-      appBar: AppBar(
-        backgroundColor: const Color(0xfffafafa),
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text(
-          "Search Donor",
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(title: "Search Donor"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -81,9 +69,7 @@ class _DonerViewState extends State<DonerView> {
                 ),
               ),
               const SizedBox(height: 8),
-
               CustomDropdownButton(
-                // items: allowedBloodTypes, // ← إضافة العناصر هنا
                 selectedValue: selectedBloodType,
                 onChanged: (value) {
                   setState(() {
@@ -91,7 +77,6 @@ class _DonerViewState extends State<DonerView> {
                   });
                 },
               ),
-
               const SizedBox(height: 16),
               Text(
                 "City / Location",
@@ -100,18 +85,14 @@ class _DonerViewState extends State<DonerView> {
                 ),
               ),
               const SizedBox(height: 8),
-
               CustomTextField(
                 controller: locationController,
                 hintText: "Enter City Name",
               ),
-
               const SizedBox(height: 16),
-
               CustomButton(
                 title: "Search Donors",
                 onTap: () {
-                  // Filter will be added here
                   if (selectedBloodType != null &&
                       locationController.text.isNotEmpty) {
                     context.read<DonorCubit>().filterDonors(
@@ -121,21 +102,8 @@ class _DonerViewState extends State<DonerView> {
                   }
                 },
               ),
-
               const Divider(),
-
-              BlocBuilder<DonorCubit, DonorState>(
-                builder: (context, state) {
-                  if (state is DonorFailure) {
-                    return Center(child: Text(state.errMessage));
-                  } else if (state is DonorLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is DonorSuccess) {
-                    return DonarsListView(doners: state.doners);
-                  }
-                  return const SizedBox();
-                },
-              ),
+              SearchBlocBuilderWidget(),
             ],
           ),
         ),

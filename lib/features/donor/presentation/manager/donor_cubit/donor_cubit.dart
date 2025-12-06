@@ -50,6 +50,7 @@ class DonorCubit extends Cubit<DonorState> {
     required DonationModel donation,
   }) async {
     emit(DonorAddingDonation());
+
     try {
       await _firestore
           .collection('Users')

@@ -23,7 +23,6 @@ class BloodBankItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // اسم البنك
             Text(
               bloodBankModel.name,
               maxLines: 1,
@@ -31,7 +30,6 @@ class BloodBankItem extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
 
-            // العنوان
             Row(
               children: [
                 Icon(
@@ -53,7 +51,6 @@ class BloodBankItem extends StatelessWidget {
               ],
             ),
 
-            // المسافة
             Row(
               children: [
                 Icon(Icons.phone, color: AppColors.secondbackground, size: 18),
@@ -67,7 +64,6 @@ class BloodBankItem extends StatelessWidget {
               ],
             ),
 
-            // مواعيد العمل
             Row(
               children: [
                 Icon(Icons.watch, color: AppColors.secondbackground, size: 18),
@@ -85,7 +81,6 @@ class BloodBankItem extends StatelessWidget {
               ],
             ),
 
-            // زرار
             Align(alignment: Alignment.center, child: ButtonsBloodBank(bloodBankModel: bloodBankModel,)),
           ],
         ),
