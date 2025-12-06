@@ -5,6 +5,7 @@ import 'package:blood_bank/core/app/app_styles.dart';
 import 'package:blood_bank/features/donor/presentation/manager/donor_cubit/donor_cubit.dart';
 import 'package:blood_bank/features/profile/presentation/view/widgets/donataion_history_is_empty.dart';
 import 'package:blood_bank/features/profile/presentation/view/widgets/donation_error_handling.dart';
+import 'package:blood_bank/features/profile/presentation/view/widgets/donation_history_widget.dart';
 import 'package:blood_bank/features/profile/presentation/view/widgets/donation_statistics.dart';
 import 'package:blood_bank/features/profile/presentation/view/widgets/profile_info_card.dart';
 import 'package:blood_bank/presentation/widgets/edit_profile_section.dart';
@@ -52,7 +53,6 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
 
     log("ProfileView currentUserId: ${user.uid}");
 
-    // جلب بيانات التبرعات بعد بناء الواجهة
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<DonorCubit>().getDonationHistoryForUser(user.uid);
     });
@@ -80,7 +80,7 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
             _buildDonationHistoryHeader(),
 
             const SizedBox(height: 12),
-            _buildDonationHistory(),
+            DonationHistoryWidget(currentUserId: _currentUserId??""),
             const SizedBox(height: 24),
 
             const EditProfileSection(),
@@ -112,31 +112,5 @@ class _ProfileViewBodyState extends State<ProfileViewBody> {
     );
   }
 
-  Widget _buildDonationHistory() {
-    return BlocBuilder<DonorCubit, DonorState>(
-      builder: (context, state) {
-        if (state is DonorDonationLoaded) {
-          final donations = state.donations;
-          if (donations.isEmpty) return const DonataionHistoryIsEmpty();
 
-          final totalDonations = donations.length;
-          final lastDonation = donations.first.time;
-          final nextDonationDate = lastDonation.add(const Duration(days: 56));
-
-          return DonationStatistics(
-            totalDonations: totalDonations,
-            nextDonationDate: nextDonationDate,
-            donations: donations,
-          );
-        } else if (state is DonorFailure) {
-          return DonationErrorHandling(
-            currentUserId: _currentUserId,
-            errMessage: state.errMessage,
-          );
-        }
-
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
-  }
 }
