@@ -7,7 +7,7 @@ import 'package:blood_bank/features/donor/presentation/views/doner_view.dart';
 import 'package:blood_bank/features/donor/presentation/views/donor_profile_view.dart';
 import 'package:blood_bank/features/emergency/presentation/manager/emergency_cubit/emergency_cubit.dart';
 import 'package:blood_bank/features/emergency/presentation/views/emergency_view.dart';
-import 'package:blood_bank/presentation/views/home_view.dart';
+import 'package:blood_bank/features/home/presentation/view/home_view.dart';
 import 'package:blood_bank/presentation/views/map_view.dart';
 import 'package:blood_bank/presentation/views/onboarding_view.dart';
 import 'package:blood_bank/features/profile/presentation/view/profile_view.dart';

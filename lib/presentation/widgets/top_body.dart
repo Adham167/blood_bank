@@ -1,6 +1,8 @@
 import 'package:blood_bank/core/app/app_colors.dart';
 import 'package:blood_bank/core/app/app_router.dart';
-import 'package:blood_bank/core/app/app_styles.dart';
+import 'package:blood_bank/presentation/widgets/blood_content_top_view.dart';
+import 'package:blood_bank/presentation/widgets/location_text_field.dart';
+import 'package:blood_bank/presentation/widgets/search_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,34 +21,8 @@ class TopBody extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
-            // 👤 App Bar
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "BloodConnect",
-                    style: AppStyles.styleBold24.copyWith(
-                      color: AppColors.background,
-                    ),
-                  ),
-                  CircleAvatar(
-                    backgroundColor: AppColors.background.withOpacity(0.2),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.notifications_outlined,
-                        color: AppColors.background,
-                        size: 22,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            BloodContentTopView(),
 
-            // 🔍 Search Bar
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
               child: Container(
@@ -128,64 +104,11 @@ class TopBody extends StatelessWidget {
 
                       // Location
                       Expanded(
-                        child: Container(
-                          height: 46,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: TextField(
-                              controller: _searchKey,
-                              decoration: InputDecoration(
-                                hintText: "Location",
-                                hintStyle: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 16,
-                                ),
-                                border: InputBorder.none,
-                                suffixIcon: Icon(
-                                  Icons.location_on_outlined,
-                                  color: Colors.grey[500],
-                                  size: 18,
-                                ),
-                              ),
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ),
+                        child: LocationTextField(searchKey: _searchKey),
                       ),
 
                       // Search Button
-                      Container(
-                        width: 46,
-                        height: 46,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            if (selectedType == null ||
-                                _searchKey.text.isEmpty) {
-                              return;
-                            }
-
-                            GoRouter.of(context).push(
-                              AppRouter.kDonerView,
-                              extra: {
-                                'type': selectedType,
-                                'location': _searchKey.text,
-                              },
-                            );
-                          },
-                          icon: Icon(
-                            Icons.search,
-                            color: AppColors.background,
-                            size: 20,
-                          ),
-                        ),
-                      ),
+                      SearchButtonWidget(selectedType: selectedType, searchKey: _searchKey),
                     ],
                   ),
                 ),
